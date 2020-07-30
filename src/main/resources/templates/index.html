@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>User List</title>
+    <script th:inline="javascript">
+        var userData = [[${userData}]];
+    </script>
+</head>
+<body>
+<h1>User list</h1>
+<div id="app"></div>
+<!--todo при продакшене засунуть готовый бандл с джаваскриптом и убрать проверку из мэйн контроллера-->
+<script th:src="${isDevMode} ? 'http://localhost:8000/main.js' : '/js/main.js'"></script>
+</body>
+</html>

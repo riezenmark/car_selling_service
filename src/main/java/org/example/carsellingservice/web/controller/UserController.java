@@ -7,6 +7,8 @@ import org.example.carsellingservice.web.exception.UnprocessableEntityException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+//todo добавить поиск ignorecase
+//todo добавить (проверить) запросы извне (csrf?)
 @RestController
 @RequestMapping("users")
 public class UserController {
@@ -23,7 +25,6 @@ public class UserController {
         return service.getAll();
     }
 
-    //todo Настроить Error page
     @GetMapping("{id}")
     public User getOne(@PathVariable("id") Long id) {
         User returnedUser = service.getById(id);
@@ -44,6 +45,7 @@ public class UserController {
         }
     }
 
+    //todo убрать передачу пароля из базы
     //todo проверить на затирание id при передаче его в теле json-а (+ при отсутсвии копирования)
     //todo проверить на 404 при несуществующем пользователе
     @PutMapping("{id}")
@@ -54,11 +56,13 @@ public class UserController {
         return service.updateById(id, user);
     }
 
+    //todo проверить удаление несуществующего и тд
     @DeleteMapping("{id}")
     public void deleteOne(@PathVariable("id") Long id) {
         service.deleteById(id);
     }
 
+    //todo error page + разнести исключения если требуется
     /*
     private User checkUserForException(User returnedUser, String message) {
         if (returnedUser == null) {
