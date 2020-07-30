@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 //todo добавить поиск ignorecase
 //todo добавить (проверить) запросы извне (csrf?)
+//todo передача неполного json-а (json view)
 @RestController
 @RequestMapping("users")
 public class UserController {

@@ -5,6 +5,8 @@ import org.example.carsellingservice.repository.UserRepository;
 import org.example.carsellingservice.service.api.UserService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -53,4 +55,8 @@ public class UserCRUD implements UserService {
         userRepository.deleteById(id);
     }
 
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return userRepository.findByUsername(username);
+    }
 }

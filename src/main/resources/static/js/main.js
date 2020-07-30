@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import router from './router/router'
 import VueResource from 'vue-resource'
 import App from 'pages/App.vue'
 
@@ -9,14 +10,7 @@ Vue.use(VueResource)
 
 new Vue({
     el: '#app',
+    router,
     render: a => a(App)
 })
 
-//todo ?
-/*created: function () {
-    userApi.get().then(result =>
-        result.json().then(data =>
-            data.forEach(user => this.users.push(user))
-        )
-    )
-}*/

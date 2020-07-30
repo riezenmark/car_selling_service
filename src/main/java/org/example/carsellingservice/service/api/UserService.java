@@ -1,8 +1,9 @@
 package org.example.carsellingservice.service.api;
 
 import org.example.carsellingservice.domain.User;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
-public interface UserService {
+public interface UserService extends UserDetailsService {
     Iterable<User> getAll();
 
     User getById(Long id);

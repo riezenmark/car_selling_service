@@ -1,21 +1,25 @@
 package org.example.carsellingservice.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.Set;
 
 @Entity(name = "user")
 @Table(name = "users")
 //todo проверить сохранение сессии без serializable
-public class User implements Serializable {
+public class User implements Serializable, UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     //todo регистрация (существует ли имя, поиск по имени), подтверждение пароля
     private String username;
+    //todo шифрование паролей
     private String password;
     @Transient
     private String confirmedPassword;
@@ -29,6 +33,7 @@ public class User implements Serializable {
     @Column(updatable = false)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime creationDate;
+    //todo реализовать логику
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime lastVisit;
 
@@ -40,6 +45,7 @@ public class User implements Serializable {
         this.id = id;
     }
 
+    @Override
     public String getUsername() {
         return username;
     }
@@ -48,6 +54,7 @@ public class User implements Serializable {
         this.username = login;
     }
 
+    @Override
     public String getPassword() {
         return password;
     }
@@ -72,6 +79,14 @@ public class User implements Serializable {
         this.email = email;
     }
 
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+
     public LocalDateTime getCreationDate() {
         return creationDate;
     }
@@ -86,5 +101,32 @@ public class User implements Serializable {
 
     public void setLastVisit(LocalDateTime lastVisit) {
         this.lastVisit = lastVisit;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return getRoles();
+    }
+
+    //todo добавить реализацию (Совсем не срочно)
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    //todo реализовать логику (isActive?)
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }
