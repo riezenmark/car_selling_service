@@ -1,5 +1,6 @@
 <template>
     <div>
+        <h1>User list</h1>
         <user-form :users="users" :user="user"/>
         <user-row v-for="user in users"
                   :key="user.id"

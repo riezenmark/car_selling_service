@@ -1,5 +1,5 @@
 <template>
-    <form action="/registration" method="post">
+    <form>
         <!--todo перенести регистрацию с отдельной страницы на кнопку в App, меняющуюся в зависимости от статуса пользователя-->
         <div>
             <label>Username:&nbsp;
@@ -41,13 +41,13 @@
                     confirmedPassword: this.confirmedPassword
                 }
 
-                this.$resource('/registration').save({}, user).then(result =>
+                this.$resource('/signup').save({}, user).then(result =>
                     result.json().then(data => {
                         //todo json response
                         if (data === true) {
                             //todo залогинить сразу
-                            //todo проверить location.href [изменить редирект]
-                            window.location.replace('/users')
+                            //todo [изменить редирект]
+                            this.$router.push('/')
                         } else {
                             this.username = ''
                             this.password = ''
