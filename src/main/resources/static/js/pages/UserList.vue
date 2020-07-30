@@ -22,7 +22,8 @@
         },
         data() {
             return {
-                user: null
+                user: null,
+                users: this.users
             }
         },
         methods: {
@@ -30,12 +31,19 @@
                 this.user = user
             },
             deleteUser(user) {
-                this.$resource('/message{/id}').remove({id: user.id}).then(result => {
+                this.$resource('/users{/id}').remove({id: user.id}).then(result => {
                     if (result.ok) {
                         this.users.splice(this.users.indexOf(user), 1)
                     }
                 })
             }
+        },
+        created() {
+            this.$resource('/users{/id}').get().then(result =>
+                result.json().then(data =>
+                    data.forEach(user => this.users.push(user))
+                )
+            )
         }
     }
 </script>

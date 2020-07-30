@@ -13,4 +13,6 @@ public interface UserService extends UserDetailsService {
     User updateById(Long id, User user);
 
     void deleteById(Long id);
+
+    boolean register(User user);
 }

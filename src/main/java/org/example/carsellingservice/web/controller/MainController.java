@@ -21,7 +21,7 @@ public class MainController {
     public String main(Model model, @AuthenticationPrincipal User user) {
         HashMap<Object, Object> userData = new HashMap<>();
         userData.put("profile", user);
-        userData.put("cars", null);
+        //userData.put("cars", null);
         model.addAttribute("userData", userData);
         model.addAttribute("isDevMode", true);
         return "index";

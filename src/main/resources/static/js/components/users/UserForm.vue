@@ -28,6 +28,7 @@
             }
         },
         watch: {
+            //todo проверить без oldValue
             user: function(newValue, oldValue) {
                 this.id = newValue.id
                 this.username = newValue.username
@@ -40,10 +41,10 @@
                     username: this.username,
                     password: this.password,
                     email: this.email
-                };
+                }
 
                 if (this.id) {
-                    this.$resource('/message{/id}').update({id: this.id}, user).then(result =>
+                    this.$resource('/users{/id}').update({id: this.id}, user).then(result =>
                         result.json().then(data => {
                             const index = getIndex(user, data.id)
                             this.users.splice(index, 1, data)
@@ -54,7 +55,7 @@
                         })
                     );
                 } else {
-                    this.$resource('/message{/id}').then(result =>
+                    this.$resource('/users{/id}').save({}, user).then(result =>
                         result.json().then(data => {
                             this.users.push(data)
                             this.username = ''

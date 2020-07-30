@@ -23,17 +23,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     //todo разнести страницы по ролям
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http
-                .antMatcher("/**")
+        http.antMatcher("/**")
                 .authorizeRequests()
-                .antMatchers("/", "/login**", "/js/**", "/error**").permitAll()
-                .anyRequest().authenticated()
+                    .antMatchers("/", "/login**", "/js/**", "/error**", "/registration**", "/signup").permitAll()
+                    .anyRequest().authenticated()
                 .and()
-                .logout().logoutSuccessUrl("/").permitAll()
+                    .logout().logoutSuccessUrl("/").permitAll()
                 .and()
-                .csrf().disable();
+                    .csrf().disable();
     }
 
+    //todo шифрование пароля
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userService)

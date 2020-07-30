@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 
+//todo SOLID. Разнести интерфейсы, single responsibilty
 @Service
 public class UserCRUD implements UserService {
     private final UserRepository userRepository;
@@ -58,5 +59,16 @@ public class UserCRUD implements UserService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepository.findByUsername(username);
+    }
+
+    @Override
+    //todo проверка пароля
+    public boolean register(User user) {
+        boolean isSuccessful = false;
+        if (userRepository.findByUsername(user.getUsername()) == null) {
+            this.add(user);
+            isSuccessful = true;
+        }
+        return isSuccessful;
     }
 }

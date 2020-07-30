@@ -20,6 +20,7 @@ public class User implements Serializable, UserDetails {
     //todo регистрация (существует ли имя, поиск по имени), подтверждение пароля
     private String username;
     //todo шифрование паролей
+    //todo генератор паролей (не обязательно, но желательно)
     private String password;
     @Transient
     private String confirmedPassword;
