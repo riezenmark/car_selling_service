@@ -17,7 +17,7 @@ public class User implements Serializable {
     private String email;
     private String gender;
     private String locale;
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.EAGER)
     private List<Car> chosenCars;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")

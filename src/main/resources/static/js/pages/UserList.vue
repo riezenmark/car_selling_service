@@ -1,6 +1,10 @@
 <template>
     <div>
         <h1>User list</h1>
+        <form>
+            <input type="search" v-model="search"/>
+            <input type="button" value="Find" @click="searchForUsers">
+        </form>
         <user-row v-for="user in users"
                   :key="user.id"
                   :user="user"
@@ -19,7 +23,8 @@
         data() {
             return {
                 user: null,
-                users: []
+                users: [],
+                search: ''
             }
         },
         methods: {
@@ -29,10 +34,18 @@
                         this.users.splice(this.users.indexOf(user), 1)
                     }
                 })
+            },
+            searchForUsers() {
+                this.users = []
+                this.$resource('/users').get({q: this.search}).then(result =>
+                    result.json().then(data =>
+                        data.forEach(user => this.users.push(user))
+                    )
+                )
             }
         },
         created() {
-            this.$resource('/users{/id}').get().then(result =>
+            this.$resource('/users').get().then(result =>
                 result.json().then(data =>
                     data.forEach(user => this.users.push(user))
                 )
