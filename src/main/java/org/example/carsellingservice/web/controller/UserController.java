@@ -1,5 +1,6 @@
 package org.example.carsellingservice.web.controller;
 
+import org.example.carsellingservice.dao.UserDao;
 import org.example.carsellingservice.domain.User;
 import org.example.carsellingservice.service.api.UserService;
 import org.example.carsellingservice.web.exception.NotFoundException;
@@ -10,9 +11,10 @@ import org.springframework.web.bind.annotation.*;
 //todo добавить поиск (ignorecase, %)
 //todo добавить (проверить) запросы извне (csrf?)
 //todo передача неполного json-а (json view)
+//todo principal role
 @RestController
 @RequestMapping("users")
-@PreAuthorize("hasAuthority('ADMIN')")
+@PreAuthorize("principal.email == 'riezenmark@gmail.com'")
 public class UserController {
 
     private final UserService service;
@@ -23,17 +25,20 @@ public class UserController {
     }
 
     @GetMapping
-    public Iterable<User> list() {
-        return service.getAll();
+    public Iterable<UserDao> list() {
+        return service.getAllWithoutCars();
     }
 
     @GetMapping("{id}")
     public User getOne(@PathVariable("id") String id) {
-        User returnedUser = service.getById(id);
-        if (returnedUser == null) {
+        User userFromDatabase = null;
+        if (!"list".equals(id)) {
+            userFromDatabase = service.getById(id);
+        }
+        if (userFromDatabase == null) {
             throw new NotFoundException("User with id " + id + " not found.");
         } else {
-            return returnedUser;
+            return userFromDatabase;
         }
     }
 

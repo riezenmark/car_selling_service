@@ -1,27 +1,32 @@
-package org.example.carsellingservice.domain;
+package org.example.carsellingservice.dao;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import javax.persistence.*;
-import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.List;
 
-@Entity
-@Table(name = "users")
-public class User implements Serializable {
-    @Id
+public class UserDao {
     private String id;
     private String name;
     private String userpic;
     private String email;
     private String gender;
     private String locale;
-    @OneToMany(fetch = FetchType.LAZY)
-    private List<Car> chosenCars;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime lastVisit;
+
+    public UserDao(
+            String id, String name, String email, String gender,
+            String locale, LocalDateTime lastVisit, String userpic
+    ) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.gender = gender;
+        this.locale = locale;
+        this.lastVisit = lastVisit;
+        this.userpic = userpic;
+    }
 
     public String getId() {
         return id;
@@ -69,14 +74,6 @@ public class User implements Serializable {
 
     public void setLocale(String locale) {
         this.locale = locale;
-    }
-
-    public List<Car> getChosenCars() {
-        return chosenCars;
-    }
-
-    public void setChosenCars(List<Car> chosenCars) {
-        this.chosenCars = chosenCars;
     }
 
     public LocalDateTime getLastVisit() {

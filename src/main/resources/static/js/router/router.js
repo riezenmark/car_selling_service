@@ -5,7 +5,7 @@ import UserList from 'pages/UserList.vue'
 Vue.use(VueRouter)
 
 const routes = [
-    { path: '/users', component: UserList }
+    { path: '/users/list', component: UserList }
 ]
 
 export default new VueRouter({

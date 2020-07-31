@@ -1,6 +1,7 @@
 <template>
     <div>
-        <i>({{ user.id }})</i> {{ user.username }} {{ user.password }} {{ user.email }}
+        <i>({{ user.id }})</i> {{ user.name }} {{ user.email }}&nbsp;
+        {{ user.gender }} {{ user.locale }} {{ user.lastVisit }} {{user.userpic}}
         <span>
             <input type="button" value="Delete" @click="del">
         </span>

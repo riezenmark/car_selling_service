@@ -4,7 +4,6 @@
         <user-row v-for="user in users"
                   :key="user.id"
                   :user="user"
-                  :editUser="editUser"
                   :deleteUser="deleteUser"
                   :users="users"/>
     </div>
@@ -14,20 +13,16 @@
     import UserRow from 'components/users/UserRow.vue'
 
     export default {
-        props: ['users'],
         components: {
             UserRow
         },
         data() {
             return {
                 user: null,
-                users: this.users
+                users: []
             }
         },
         methods: {
-            editUser(user) {
-                this.user = user
-            },
             deleteUser(user) {
                 this.$resource('/users{/id}').remove({id: user.id}).then(result => {
                     if (result.ok) {

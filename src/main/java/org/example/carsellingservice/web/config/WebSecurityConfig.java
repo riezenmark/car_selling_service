@@ -1,6 +1,5 @@
 package org.example.carsellingservice.web.config;
 
-import org.example.carsellingservice.domain.Role;
 import org.example.carsellingservice.domain.User;
 import org.example.carsellingservice.repository.UserDetailsRepository;
 import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth2Sso;
@@ -13,7 +12,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
 
 @Configuration
 @EnableWebSecurity
@@ -47,7 +45,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 newUser.setGender((String) map.get("gender"));
                 newUser.setLocale((String) map.get("locale"));
                 newUser.setUserpic((String) map.get("picture"));
-                newUser.setRoles(Collections.singleton(Role.ADMIN));
 
                 return newUser;
             });

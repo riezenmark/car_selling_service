@@ -7,7 +7,7 @@
             </div>
             <div v-else>
                 <div>{{ profile.name }}&nbsp;<a href="/logout">Logout</a></div>
-                <div v-if="profile.roles.indexOf('ADMIN') !== -1">
+                <div v-if="profile.email === 'riezenmark@gmail.com'">
                     <button @click="userList">Users</button>
                 </div>
             </div>
@@ -28,7 +28,7 @@
         },
         methods: {
             userList() {
-                this.$router.push('/users')
+                this.$router.push('/users/list')
             }
         }
     }

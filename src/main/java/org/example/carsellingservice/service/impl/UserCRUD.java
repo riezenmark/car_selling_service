@@ -1,12 +1,10 @@
 package org.example.carsellingservice.service.impl;
 
+import org.example.carsellingservice.dao.UserDao;
 import org.example.carsellingservice.domain.User;
 import org.example.carsellingservice.repository.UserDetailsRepository;
 import org.example.carsellingservice.service.api.UserService;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 //todo SOLID. Разнести интерфейсы, single responsibilty
@@ -20,8 +18,8 @@ public class UserCRUD implements UserService {
     }
 
     @Override
-    public Iterable<User> getAll() {
-        return userRepository.findAll();
+    public Iterable<UserDao> getAllWithoutCars() {
+        return userRepository.getAllWithoutCars();
     }
 
     @Override
