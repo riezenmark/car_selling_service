@@ -1,7 +1,7 @@
 package org.example.carsellingservice.service.impl;
 
 import org.example.carsellingservice.domain.User;
-import org.example.carsellingservice.repository.UserRepository;
+import org.example.carsellingservice.repository.UserDetailsRepository;
 import org.example.carsellingservice.service.api.UserService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,15 +9,13 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-
 //todo SOLID. Разнести интерфейсы, single responsibilty
 @Service
 public class UserCRUD implements UserService {
-    private final UserRepository userRepository;
+    private final UserDetailsRepository userRepository;
 
     @Autowired
-    public UserCRUD(UserRepository userRepository) {
+    public UserCRUD(UserDetailsRepository userRepository) {
         this.userRepository = userRepository;
     }
 
@@ -27,48 +25,12 @@ public class UserCRUD implements UserService {
     }
 
     @Override
-    public User getById(Long id) {
+    public User getById(String id) {
         return userRepository.findById(id).orElse(null);
     }
 
     @Override
-    public User add(User user) {
-        User result;
-        if (user.getId() == null || userRepository.findById(user.getId()).isEmpty()) {
-            user.setCreationDate(LocalDateTime.now());
-            result = userRepository.save(user);
-        } else {
-            result = null;
-        }
-        return result;
-    }
-
-    //todo Проверить на затирание not null полей и сохранение без repo.save
-    @Override
-    public User updateById(Long id, User user) {
-        User userFromDatabase = this.getById(id);
-        BeanUtils.copyProperties(user, userFromDatabase, "id");
-        return userRepository.save(userFromDatabase);
-    }
-
-    @Override
-    public void deleteById(Long id) {
+    public void deleteById(String id) {
         userRepository.deleteById(id);
-    }
-
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.findByUsername(username);
-    }
-
-    @Override
-    //todo проверка пароля
-    public boolean register(User user) {
-        boolean isSuccessful = false;
-        if (userRepository.findByUsername(user.getUsername()) == null) {
-            this.add(user);
-            isSuccessful = true;
-        }
-        return isSuccessful;
     }
 }

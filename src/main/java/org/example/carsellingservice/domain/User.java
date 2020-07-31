@@ -5,71 +5,54 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
-@Entity(name = "user")
+@Entity
 @Table(name = "users")
-//todo проверить сохранение сессии без serializable
-public class User implements Serializable, UserDetails {
+public class User implements UserDetails {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    //todo регистрация (существует ли имя, поиск по имени), подтверждение пароля
-    private String username;
-    //todo шифрование паролей
-    //todo генератор паролей (не обязательно, но желательно)
-    private String password;
-    @Transient
-    private String confirmedPassword;
+    private String id;
+    private String name;
+    private String userpic;
     private String email;
+    private String gender;
+    private String locale;
+    @OneToMany(fetch = FetchType.EAGER)
+    private List<Car> chosenCars;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime lastVisit;
 
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))
     @Enumerated(EnumType.STRING)
     private Set<Role> roles;
 
-    @Column(updatable = false)
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime creationDate;
-    //todo реализовать логику
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime lastVisit;
-
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    @Override
-    public String getUsername() {
-        return username;
+    public String getName() {
+        return name;
     }
 
-    public void setUsername(String login) {
-        this.username = login;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    @Override
-    public String getPassword() {
-        return password;
+    public String getUserpic() {
+        return userpic;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getConfirmedPassword() {
-        return confirmedPassword;
-    }
-
-    public void setConfirmedPassword(String confirmedPassword) {
-        this.confirmedPassword = confirmedPassword;
+    public void setUserpic(String userpic) {
+        this.userpic = userpic;
     }
 
     public String getEmail() {
@@ -80,20 +63,28 @@ public class User implements Serializable, UserDetails {
         this.email = email;
     }
 
-    public Set<Role> getRoles() {
-        return roles;
+    public String getGender() {
+        return gender;
     }
 
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
+    public void setGender(String gender) {
+        this.gender = gender;
     }
 
-    public LocalDateTime getCreationDate() {
-        return creationDate;
+    public String getLocale() {
+        return locale;
     }
 
-    public void setCreationDate(LocalDateTime creationDate) {
-        this.creationDate = creationDate;
+    public void setLocale(String locale) {
+        this.locale = locale;
+    }
+
+    public List<Car> getChosenCars() {
+        return chosenCars;
+    }
+
+    public void setChosenCars(List<Car> chosenCars) {
+        this.chosenCars = chosenCars;
     }
 
     public LocalDateTime getLastVisit() {
@@ -104,12 +95,29 @@ public class User implements Serializable, UserDetails {
         this.lastVisit = lastVisit;
     }
 
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return getRoles();
     }
 
-    //todo добавить реализацию (Совсем не срочно)
+    @Override
+    public String getPassword() {
+        return null;
+    }
+
+    @Override
+    public String getUsername() {
+        return null;
+    }
+
     @Override
     public boolean isAccountNonExpired() {
         return true;
@@ -125,7 +133,6 @@ public class User implements Serializable, UserDetails {
         return true;
     }
 
-    //todo реализовать логику (isActive?)
     @Override
     public boolean isEnabled() {
         return true;

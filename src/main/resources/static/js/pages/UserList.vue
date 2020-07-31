@@ -1,7 +1,6 @@
 <template>
     <div>
         <h1>User list</h1>
-        <user-form :users="users" :user="user"/>
         <user-row v-for="user in users"
                   :key="user.id"
                   :user="user"
@@ -13,13 +12,11 @@
 
 <script>
     import UserRow from 'components/users/UserRow.vue'
-    import UserForm from 'components/users/UserForm.vue'
 
     export default {
         props: ['users'],
         components: {
-            UserRow,
-            UserForm
+            UserRow
         },
         data() {
             return {
