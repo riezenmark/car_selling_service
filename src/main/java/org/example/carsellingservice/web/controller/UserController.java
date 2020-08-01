@@ -31,5 +31,5 @@ public class UserController {
         service.deleteById(id);
     }
 
-    //todo error page
+    //todo error page for forbidden
 }

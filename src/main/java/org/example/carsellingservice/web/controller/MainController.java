@@ -16,9 +16,8 @@ public class MainController {
     @GetMapping
     public String main(Model model, @AuthenticationPrincipal User user) {
         HashMap<Object, Object> userData = new HashMap<>();
-        userData.put("profile", user);
         if (user != null) {
-            userData.put("cars", user.getChosenCars());
+            userData.put("profile", user);
         }
         model.addAttribute("userData", userData);
         model.addAttribute("isDevMode", true);

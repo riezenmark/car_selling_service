@@ -14,6 +14,7 @@ public class Car {
     private Model model;
     private double price;
     private boolean used;
+    private boolean yearOfProduction;
     @Enumerated(EnumType.STRING)
     private Transmission transmission;
     @Enumerated(EnumType.STRING)
@@ -61,6 +62,14 @@ public class Car {
 
     public void setUsed(boolean used) {
         this.used = used;
+    }
+
+    public boolean isYearOfProduction() {
+        return yearOfProduction;
+    }
+
+    public void setYearOfProduction(boolean yearOfProduction) {
+        this.yearOfProduction = yearOfProduction;
     }
 
     public Transmission getTransmission() {

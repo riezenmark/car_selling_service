@@ -1,10 +1,8 @@
 <template>
     <div>
         <h1>User list</h1>
-        <form>
-            <input type="search" v-model="search"/>
-            <input type="button" value="Find" @click="searchForUsers">
-        </form>
+        <input type="search" v-model="search" @keyup.enter="searchForUsers"/>
+        <input type="button" value="Find" @click="searchForUsers">
         <user-row v-for="user in users"
                   :key="user.id"
                   :user="user"
@@ -14,6 +12,7 @@
 </template>
 
 <script>
+    import { mapGetters } from 'vuex'
     import UserRow from 'components/users/UserRow.vue'
 
     export default {
@@ -37,7 +36,7 @@
             },
             searchForUsers() {
                 this.users = []
-                this.$resource('/users').get({q: this.search}).then(result =>
+                this.$resource('/users{/id}').get({q: this.search}).then(result =>
                     result.json().then(data =>
                         data.forEach(user => this.users.push(user))
                     )

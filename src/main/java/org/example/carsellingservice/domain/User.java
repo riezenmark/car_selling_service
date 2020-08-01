@@ -18,7 +18,7 @@ public class User implements Serializable {
     private String gender;
     private String locale;
     @OneToMany(fetch = FetchType.EAGER)
-    private List<Car> chosenCars;
+    private List<Car> addedCars;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime lastVisit;
@@ -71,12 +71,12 @@ public class User implements Serializable {
         this.locale = locale;
     }
 
-    public List<Car> getChosenCars() {
-        return chosenCars;
+    public List<Car> getAddedCars() {
+        return addedCars;
     }
 
-    public void setChosenCars(List<Car> chosenCars) {
-        this.chosenCars = chosenCars;
+    public void setAddedCars(List<Car> addedCars) {
+        this.addedCars = addedCars;
     }
 
     public LocalDateTime getLastVisit() {

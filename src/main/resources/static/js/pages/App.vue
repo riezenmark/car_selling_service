@@ -1,31 +1,32 @@
 <template>
-    <div>
-        <div style="background-color: green">
-            <h3>Car Selling App</h3>
+    <v-app>
+        <v-navigation-drawer app></v-navigation-drawer>
+        <v-app-bar app>
+            CarSellingApp
             <div v-if="!profile">
                 <a href="/login">Login</a>
             </div>
             <div v-else>
-                <div>{{ profile.name }}&nbsp;<a href="/logout">Logout</a></div>
+                {{ profile.name }}
+                <a href="/logout">Logout</a>
                 <div v-if="profile.email === 'riezenmark@gmail.com'">
                     <button @click="userList">Users</button>
                 </div>
             </div>
-        </div>
-        <router-view></router-view>
-    </div>
+        </v-app-bar>
+        <v-main>
+            <v-container fluid>
+                <router-view></router-view>
+            </v-container>
+        </v-main>
+        <v-footer app></v-footer>
+    </v-app>
 </template>
 
 <script>
+    import { mapState } from 'vuex'
     export default {
-        //todo add vuex store
-        data() {
-            return {
-                //todo вынести в vuex
-                cars: userData.cars,
-                profile: userData.profile
-            }
-        },
+        computed: mapState(['profile']),
         methods: {
             userList() {
                 this.$router.push('/users/list')

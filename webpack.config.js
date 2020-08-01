@@ -8,7 +8,7 @@ module.exports = {
     devServer: {
         contentBase: './dist',
         compress: true,
-        port: 8000,
+        port: 9000,
         allowedHosts: [
             'localhost:8080'
         ]
@@ -28,6 +28,28 @@ module.exports = {
             {
                 test: /\.vue$/,
                 loader: 'vue-loader'
+            },
+            {
+                test: /\.css$/,
+                use: [
+                    'vue-style-loader',
+                    'css-loader'
+                ]
+            },
+            {
+                test: /\.s(c|a)ss$/,
+                use: [
+                    'vue-style-loader',
+                    'css-loader',
+                    {
+                        loader: 'sass-loader',
+                        options: {
+                            implementation: require('sass'),
+                            fiber: require('fibers'),
+                            indentedSyntax: true
+                        }
+                    }
+                ]
             }
         ]
     },
