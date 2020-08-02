@@ -13,16 +13,12 @@ public class Car {
     @ManyToOne
     private Model model;
     private double price;
-    private boolean used;
     private boolean yearOfProduction;
     @Enumerated(EnumType.STRING)
     private Transmission transmission;
     @Enumerated(EnumType.STRING)
-    private BodyworkType bodyworkType;
-    @Enumerated(EnumType.STRING)
     private EngineType engineType;
     private float engineCapacity;
-    private int mileage;
 
     public Long getId() {
         return id;
@@ -56,14 +52,6 @@ public class Car {
         this.price = price;
     }
 
-    public boolean isUsed() {
-        return used;
-    }
-
-    public void setUsed(boolean used) {
-        this.used = used;
-    }
-
     public boolean isYearOfProduction() {
         return yearOfProduction;
     }
@@ -80,14 +68,6 @@ public class Car {
         this.transmission = transmission;
     }
 
-    public BodyworkType getBodyworkType() {
-        return bodyworkType;
-    }
-
-    public void setBodyworkType(BodyworkType bodyworkType) {
-        this.bodyworkType = bodyworkType;
-    }
-
     public EngineType getEngineType() {
         return engineType;
     }
@@ -102,13 +82,5 @@ public class Car {
 
     public void setEngineCapacity(float engineCapacity) {
         this.engineCapacity = engineCapacity;
-    }
-
-    public int getMileage() {
-        return mileage;
-    }
-
-    public void setMileage(int mileage) {
-        this.mileage = mileage;
     }
 }

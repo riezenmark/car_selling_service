@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.*;
 
 //todo добавить (проверить) запросы извне (csrf?)
 //todo передача неполного json-а (json view)
-//todo principal role
 @RestController
 @RequestMapping("users")
 @PreAuthorize("principal.email == 'riezenmark@gmail.com'")

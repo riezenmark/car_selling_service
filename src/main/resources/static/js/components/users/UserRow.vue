@@ -1,12 +1,14 @@
 <template>
-    <div>
-        <i>({{ user.id }})</i> {{ user.name }} {{ user.email }}&nbsp;
-        {{ user.gender }} {{ user.locale }} {{ user.lastVisit }}&nbsp;
-        <img :src="user.userpic" alt="Userpic" style="width: 50px" height="50px">
-        <span>
-            <input type="button" value="Delete" @click="del">
-        </span>
-    </div>
+    <tr>
+        <td>{{ user.id }}</td>
+        <td>{{ user.name }}</td>
+        <td>{{ user.email }}</td>
+        <td>{{ user.gender }}</td>
+        <td>{{ user.locale }}</td>
+        <td>{{ user.lastVisit }}</td>
+        <td><img :src="user.userpic" alt="" style="width: 50px" height="50px"></td>
+        <td><v-btn @click="del" tile>Delete</v-btn></td>
+    </tr>
 </template>
 
 <script>

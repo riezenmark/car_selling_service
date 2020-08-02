@@ -22,17 +22,14 @@ public class CarController {
             @RequestParam(required = false) String manufacturer,
             @RequestParam(required = false) String model,
             @RequestParam(required = false) double price,
-            @RequestParam(required = false) boolean used,
             @RequestParam(required = false) int yearOfProduction,
             @RequestParam(required = false) Transmission transmission,
-            @RequestParam(required = false) BodyworkType bodyworkType,
             @RequestParam(required = false) EngineType engineType,
-            @RequestParam(required = false) float engineCapacity,
-            @RequestParam(required = false) int mileage
+            @RequestParam(required = false) float engineCapacity
     ) {
         return carService.findCars(
-                manufacturer, model, price, used, yearOfProduction,
-                transmission, bodyworkType, engineType, engineCapacity, mileage
+                manufacturer, model, price, yearOfProduction,
+                transmission, engineType, engineCapacity
         );
     }
 
@@ -42,18 +39,15 @@ public class CarController {
             @RequestParam String manufacturer,
             @RequestParam String model,
             @RequestParam double price,
-            @RequestParam boolean used,
             @RequestParam(required = false) int yearOfProduction,
             @RequestParam(required = false) Transmission transmission,
-            @RequestParam(required = false) BodyworkType bodyworkType,
             @RequestParam(required = false) EngineType engineType,
-            @RequestParam(required = false) float engineCapacity,
-            @RequestParam(required = false) int mileage
+            @RequestParam(required = false) float engineCapacity
     ) {
         return carService.addCarforUser(
                 user,
-                manufacturer, model, price, used, yearOfProduction,
-                transmission, bodyworkType, engineType, engineCapacity, mileage
+                manufacturer, model, price, yearOfProduction,
+                transmission, engineType, engineCapacity
         );
     }
 
@@ -63,18 +57,15 @@ public class CarController {
             @RequestParam(required = false) String manufacturer,
             @RequestParam(required = false) String model,
             @RequestParam(required = false) double price,
-            @RequestParam(required = false) boolean used,
             @RequestParam(required = false) int yearOfProduction,
             @RequestParam(required = false) Transmission transmission,
-            @RequestParam(required = false) BodyworkType bodyworkType,
             @RequestParam(required = false) EngineType engineType,
-            @RequestParam(required = false) float engineCapacity,
-            @RequestParam(required = false) int mileage
+            @RequestParam(required = false) float engineCapacity
     ) {
         return carService.updateCarForUser(
                 user,
-                manufacturer, model, price, used, yearOfProduction,
-                transmission, bodyworkType, engineType, engineCapacity, mileage
+                manufacturer, model, price, yearOfProduction,
+                transmission, engineType, engineCapacity
         );
     }
 
@@ -88,4 +79,4 @@ public class CarController {
         carService.deleteChosenCarFromUser(user, carId);
     }
 }
-*/
+ */
