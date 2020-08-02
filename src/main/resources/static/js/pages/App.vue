@@ -44,7 +44,7 @@
                 </v-row>
             </v-container>
             <v-row justify="space-around" style="position: sticky; bottom: 0;" class="indigo">
-                <v-btn class="indigo--text white" style="margin-bottom: 5px; margin-top: 5px">Найти объявления</v-btn>
+                <v-btn outlined class="white--text" style="margin-bottom: 5px; margin-top: 5px">Найти объявления</v-btn>
             </v-row>
         </v-navigation-drawer>
         <v-app-bar app class="indigo" clipped-left>
@@ -62,11 +62,9 @@
             <v-btn
                     outlined
                     v-if="profile && profile.email === 'riezenmark@gmail.com'"
-                    @click="userList"
+                    @click="adminPage"
                     class="white--text ml-2"
-            >
-                ADMIN
-            </v-btn>
+            >ADMIN</v-btn>
         </v-app-bar>
         <v-main>
             <v-container fluid>
@@ -87,8 +85,8 @@
     export default {
         computed: mapState(['profile']),
         methods: {
-            userList() {
-                this.$router.push('/users/list')
+            adminPage() {
+                this.$router.push('/admin')
             }
         },
         props: {

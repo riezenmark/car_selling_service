@@ -7,7 +7,7 @@
         <td>{{ user.locale }}</td>
         <td>{{ user.lastVisit }}</td>
         <td><img :src="user.userpic" alt="" style="width: 50px" height="50px"></td>
-        <td><v-btn @click="del" tile>Delete</v-btn></td>
+        <td><v-btn outlined class="indigo--text" @click="del">Delete</v-btn></td>
     </tr>
 </template>
 

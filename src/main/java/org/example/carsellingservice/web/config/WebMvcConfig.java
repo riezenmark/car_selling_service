@@ -15,6 +15,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
         return container -> {
             container.addErrorPages(new ErrorPage(HttpStatus.NOT_FOUND, "/"));
             container.addErrorPages(new ErrorPage(HttpStatus.METHOD_NOT_ALLOWED, "/"));
+            container.addErrorPages(new ErrorPage(HttpStatus.FORBIDDEN, "/"));
         };
     }
 }

@@ -51,7 +51,7 @@
         },
         methods: {
             deleteUser(user) {
-                this.$resource('/users{/id}').remove({id: user.id}).then(result => {
+                this.$resource('/admin/users{/id}').remove({id: user.id}).then(result => {
                     if (result.ok) {
                         this.users.splice(this.users.indexOf(user), 1)
                     }
@@ -59,7 +59,7 @@
             },
             searchForUsers() {
                 this.users = []
-                this.$resource('/users{/id}').get({q: this.search}).then(result =>
+                this.$resource('/admin/users').get({q: this.search}).then(result =>
                     result.json().then(data =>
                         data.forEach(user => this.users.push(user))
                     )
@@ -67,7 +67,7 @@
             }
         },
         created() {
-            this.$resource('/users').get().then(result =>
+            this.$resource('/admin/users').get().then(result =>
                 result.json().then(data =>
                     data.forEach(user => this.users.push(user))
                 )
