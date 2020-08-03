@@ -1,17 +1,22 @@
 package org.example.carsellingservice.domain;
 
+import com.fasterxml.jackson.annotation.JsonView;
+import org.example.carsellingservice.domain.view.Views;
+
 import javax.persistence.*;
-import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "makers")
 public class Maker {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonView(Views.IdName.class)
     private int id;
+    @JsonView(Views.IdName.class)
     private String name;
     @OneToMany
-    private List<Model> models;
+    private Set<Model> models;
 
     public int getId() {
         return id;
@@ -29,11 +34,11 @@ public class Maker {
         this.name = name;
     }
 
-    public List<Model> getModels() {
+    public Set<Model> getModels() {
         return models;
     }
 
-    public void setModels(List<Model> models) {
+    public void setModels(Set<Model> models) {
         this.models = models;
     }
 }

@@ -2,8 +2,8 @@
     <v-app>
         <v-navigation-drawer v-model="drawer" app clipped>
             <v-container>
-                <v-autocomplete outlined label="Марка" placeholder="Любая" clearable dense></v-autocomplete>
-                <v-autocomplete outlined label="Модель" placeholder="Любая" clearable dense></v-autocomplete>
+                <v-autocomplete v-model="mark" outlined label="Марка" placeholder="Любая" clearable dense @change="enableDisableModel"></v-autocomplete>
+                <v-autocomplete v-model="model.text" :disabled="model.disabled" outlined label="Модель" placeholder="Любая" clearable dense></v-autocomplete>
                 <v-row no-gutters>
                     <v-col>
                         <v-text-field outlined class="rounded-r-0" label="Цена от" placeholder="0" dense></v-text-field>
@@ -49,12 +49,14 @@
         </v-navigation-drawer>
         <v-app-bar app class="indigo" clipped-left>
             <v-app-bar-nav-icon @click.stop="drawer = !drawer" class="white--text"></v-app-bar-nav-icon>
-            <v-toolbar-title class="white--text">CarSelling App</v-toolbar-title>
+            <v-btn class="ml-2" icon @click="mainPage">
+                <v-icon large class="white--text">mdi-car-sports</v-icon>
+            </v-btn>
             <v-spacer></v-spacer>
-            <v-btn v-if="!profile" text class="white--text" href="/login">Вход и регистрация</v-btn>
-            <v-btn v-if="profile" icon class="white--text">
+            <v-btn icon class="white--text" @click="carAddingPage(profile)">
                 <v-icon>mdi-plus</v-icon>
             </v-btn>
+            <v-btn v-if="!profile" text class="white--text" href="/login">Вход и регистрация</v-btn>
             <span v-if="profile" class="white--text mx-2">{{ profile.name }}</span>
             <v-btn v-if="profile" icon href="/logout">
                 <v-icon>mdi-exit-to-app</v-icon>
@@ -83,18 +85,43 @@
     import {mapState} from 'vuex'
 
     export default {
+        data: () => ({
+            drawer: null,
+            mark: '',
+            model: {
+                text: '',
+                disabled: true
+            }
+        }),
         computed: mapState(['profile']),
         methods: {
+            enableDisableModel() {
+                if (this.mark) {
+                    this.model.disabled = false
+                } else {
+                    this.model.disabled = true
+                    this.model.text = ''
+                }
+            },
             adminPage() {
                 this.$router.push('/admin')
+            },
+            carAddingPage(profile) {
+                if (profile) {
+                    this.$router.push('/add')
+                } else {
+                    window.location.replace('/login')
+                }
+            },
+            mainPage() {
+                if (this.$route !== '/') {
+                    this.$router.push('/')
+                }
             }
         },
         props: {
             source: String,
-        },
-        data: () => ({
-            drawer: null,
-        })
+        }
     }
 </script>
 

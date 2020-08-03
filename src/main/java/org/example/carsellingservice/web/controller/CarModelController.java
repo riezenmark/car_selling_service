@@ -1,0 +1,28 @@
+package org.example.carsellingservice.web.controller;
+
+import com.fasterxml.jackson.annotation.JsonView;
+import org.example.carsellingservice.domain.Model;
+import org.example.carsellingservice.domain.view.Views;
+import org.example.carsellingservice.service.impl.CarModelCRUD;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/models")
+public class CarModelController {
+
+    private final CarModelCRUD modelService;
+
+    @Autowired
+    public CarModelController(CarModelCRUD modelService) {
+        this.modelService = modelService;
+    }
+
+    @PostMapping
+    @PreAuthorize("principal.email == 'riezenmark@gmail.com'")
+    @JsonView(Views.IdName.class)
+    public Model addNewModel(@RequestBody Model model) {
+        return modelService.addOne(model);
+    }
+}
