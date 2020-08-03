@@ -56,6 +56,13 @@ public class CarModelCRUD implements CarModelService {
     }
 
     @Override
+    public Iterable<Model> getAllModelsOfMaker(String makerName) {
+        System.out.println(makerName);
+        System.out.println(makerService.getByName(makerName));
+        return makerService.getByName(makerName).getModels();
+    }
+
+    @Override
     public Model updateOne(Model model) {
         return null;
     }

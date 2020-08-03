@@ -11,9 +11,9 @@ import javax.persistence.*;
 public class Model {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonView(Views.IdName.class)
+    @JsonView(Views.Id.class)
     private Long id;
-    @JsonView(Views.IdName.class)
+    @JsonView(Views.Name.class)
     private String name;
     @ManyToOne(fetch = FetchType.EAGER)
     private Maker manufacturer;

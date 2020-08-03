@@ -5,7 +5,8 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
     state: {
-        profile: userData.profile
+        profile: frontendData.profile,
+        makers: frontendData.makers
     },
     mutations: {
         addChosenCarMutation(state, chosenCar) {

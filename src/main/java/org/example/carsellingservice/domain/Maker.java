@@ -11,9 +11,9 @@ import java.util.Set;
 public class Maker {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonView(Views.IdName.class)
+    @JsonView(Views.Id.class)
     private int id;
-    @JsonView(Views.IdName.class)
+    @JsonView(Views.Name.class)
     private String name;
     @OneToMany
     private Set<Model> models;

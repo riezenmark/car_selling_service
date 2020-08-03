@@ -1,28 +1,32 @@
 <template>
     <v-app>
-        <v-navigation-drawer v-model="drawer" app clipped>
+        <v-navigation-drawer v-model="drawer" app clipped width="300">
             <v-container>
-                <v-autocomplete v-model="mark" outlined label="Марка" placeholder="Любая" clearable dense @change="enableDisableModel"></v-autocomplete>
-                <v-autocomplete v-model="model.text" :disabled="model.disabled" outlined label="Модель" placeholder="Любая" clearable dense></v-autocomplete>
+                <v-autocomplete v-model="mark" outlined label="Марка" placeholder="Любая" clearable dense
+                                @change="enableDisableModel" :items="makerNames"></v-autocomplete>
+                <v-autocomplete v-model="model.text" :disabled="model.disabled" outlined label="Модель"
+                                placeholder="Любая" clearable dense :items="modelNames"></v-autocomplete>
                 <v-row no-gutters>
                     <v-col>
                         <v-text-field outlined class="rounded-r-0" label="Цена от" placeholder="0" dense></v-text-field>
                     </v-col>
                     <v-col>
-                        <v-text-field outlined class="rounded-l-0" label="до, руб." placeholder="max" dense></v-text-field>
+                        <v-text-field outlined class="rounded-l-0" label="до, руб." placeholder="max"
+                                      dense></v-text-field>
                     </v-col>
                 </v-row>
                 <v-row no-gutters>
                     <v-col>
-                        <v-text-field outlined class="rounded-r-0" label="Год от" placeholder="1960" dense></v-text-field>
+                        <v-text-field outlined class="rounded-r-0" label="Год от" placeholder="1960"
+                                      dense></v-text-field>
                     </v-col>
                     <v-col>
                         <v-text-field
-                            outlined
-                            class="rounded-l-0"
-                            label="до"
-                            :placeholder="new Date().getFullYear().toString()"
-                            dense>
+                                outlined
+                                class="rounded-l-0"
+                                label="до"
+                                :placeholder="new Date().getFullYear().toString()"
+                                dense>
                         </v-text-field>
                     </v-col>
                 </v-row>
@@ -34,12 +38,12 @@
                 <span>Тип двигателя</span>
                 <v-row justify="space-around">
                     <v-col>
-                    <v-checkbox label="бензин"></v-checkbox>
-                    <v-checkbox label="дизель"></v-checkbox>
+                        <v-checkbox label="бензин"></v-checkbox>
+                        <v-checkbox label="дизель"></v-checkbox>
                     </v-col>
                     <v-col>
-                    <v-checkbox label="гибрид"></v-checkbox>
-                    <v-checkbox label="электро"></v-checkbox>
+                        <v-checkbox label="гибрид"></v-checkbox>
+                        <v-checkbox label="электро"></v-checkbox>
                     </v-col>
                 </v-row>
             </v-container>
@@ -66,7 +70,8 @@
                     v-if="profile && profile.email === 'riezenmark@gmail.com'"
                     @click="adminPage"
                     class="white--text ml-2"
-            >ADMIN</v-btn>
+            >ADMIN
+            </v-btn>
         </v-app-bar>
         <v-main>
             <v-container fluid>
@@ -86,6 +91,8 @@
 
     export default {
         data: () => ({
+            makerNames: [],
+            modelNames: [],
             drawer: null,
             mark: '',
             model: {
@@ -93,14 +100,23 @@
                 disabled: true
             }
         }),
-        computed: mapState(['profile']),
+        computed: mapState(['profile', 'makers']),
         methods: {
+            getModels() {
+                this.$resource('/models').get({makerName: this.mark}).then(result =>
+                    result.json().then(data =>
+                        data.forEach(model => this.modelNames.push(model.name))
+                    )
+                )
+            },
             enableDisableModel() {
+                this.model.text = ''
+                this.modelNames = []
                 if (this.mark) {
                     this.model.disabled = false
+                    this.getModels()
                 } else {
                     this.model.disabled = true
-                    this.model.text = ''
                 }
             },
             adminPage() {
@@ -121,6 +137,9 @@
         },
         props: {
             source: String,
+        },
+        created() {
+            this.makers.forEach(maker => this.makerNames.push(maker.name))
         }
     }
 </script>

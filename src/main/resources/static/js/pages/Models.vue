@@ -3,14 +3,14 @@
         <v-row dense>
             <v-col class="col-12 col-md-4">
                 <v-combobox v-model="addMark" label="Новая марка" clearable
-                            @change="enableDisableAddModel"></v-combobox>
+                            @change="enableDisableAddModel" :items="makerNames"></v-combobox>
             </v-col>
             <v-col class="col-12 col-md-2">
 
             </v-col>
             <v-col class="col-12 col-md-4">
                 <v-autocomplete v-model="changeMark" label="Марка" clearable
-                                @change="enableDisableChangeModel"></v-autocomplete>
+                                @change="enableDisableChangeModel" :items="makerNames"></v-autocomplete>
             </v-col>
             <v-col class="col-12 col-md-2">
                 <v-btn outlined :disabled="changeBtnDisabled" class="indigo--text">Изменить</v-btn>
@@ -26,30 +26,25 @@
             </v-col>
             <v-col class="col-12 col-md-4">
                 <v-autocomplete v-model="changeModel.text" :disabled="changeModel.disabled"
-                                label="Модель" clearable @change="enableDisableChangeAndDeleteBtn"></v-autocomplete>
+                                label="Модель" clearable @change="enableDisableChangeAndDeleteBtn"
+                                :items="modelNames"></v-autocomplete>
             </v-col>
             <v-col class="col-12 col-md-2">
                 <v-btn :disabled="deleteBtnDisabled" outlined class="indigo--text">Удалить</v-btn>
             </v-col>
         </v-row>
         <v-divider></v-divider>
-        <v-simple-table>
-            <thead>
-            <tr>
-                <th>Марка</th>
-                <th>Модель</th>
-            </tr>
-            </thead>
-            <tbody>
-            </tbody>
-        </v-simple-table>
     </div>
 </template>
 
 <script>
+    import {mapState} from "vuex";
+
     export default {
         data() {
             return {
+                makerNames: [],
+                modelNames: [],
                 changeModel: {
                     disabled: true,
                     text: ''
@@ -65,7 +60,15 @@
                 deleteBtnDisabled: true
             }
         },
+        computed: mapState(['makers']),
         methods: {
+            getModels() {
+                this.$resource('/models').get({makerName: this.changeMark}).then(result =>
+                    result.json().then(data =>
+                        data.forEach(model => this.modelNames.push(model.name))
+                    )
+                )
+            },
             enableDisableAddModel() {
                 if (this.addMark) {
                     this.addModel.disabled = false
@@ -76,11 +79,13 @@
                 }
             },
             enableDisableChangeModel() {
+                this.changeModel.text = ''
+                this.modelNames = []
                 if (this.changeMark) {
                     this.changeModel.disabled = false
+                    this.getModels()
                 } else {
                     this.changeModel.disabled = true
-                    this.changeModel.text = ''
                     this.enableDisableChangeAndDeleteBtn()
                 }
             },
@@ -116,7 +121,10 @@
                 this.addModel.text = ''
                 this.addModel.disabled = true
                 this.addBtnDisabled = true
-            }
+            },
+        },
+        created() {
+            this.makers.forEach(maker => this.makerNames.push(maker.name))
         }
     }
 </script>

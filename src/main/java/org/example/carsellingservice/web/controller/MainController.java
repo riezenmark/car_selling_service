@@ -1,6 +1,8 @@
 package org.example.carsellingservice.web.controller;
 
 import org.example.carsellingservice.domain.User;
+import org.example.carsellingservice.service.api.CarMakerService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,13 +15,22 @@ import java.util.HashMap;
 @RequestMapping("/")
 public class MainController {
 
+    private final CarMakerService makerService;
+
+    @Autowired
+    public MainController(CarMakerService makerService) {
+        this.makerService = makerService;
+    }
+
+    //todo убрать девмод
     @GetMapping
     public String main(Model model, @AuthenticationPrincipal User user) {
-        HashMap<Object, Object> userData = new HashMap<>();
+        HashMap<Object, Object> frontendData = new HashMap<>();
         if (user != null) {
-            userData.put("profile", user);
+            frontendData.put("profile", user);
         }
-        model.addAttribute("userData", userData);
+        frontendData.put("makers", makerService.getAllWithoutModels());
+        model.addAttribute("frontendData", frontendData);
         model.addAttribute("isDevMode", true);
         return "index";
     }

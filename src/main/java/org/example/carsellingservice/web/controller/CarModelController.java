@@ -19,6 +19,12 @@ public class CarModelController {
         this.modelService = modelService;
     }
 
+    @GetMapping
+    @JsonView(Views.IdName.class)
+    public Iterable<Model> getModelsOfMaker(@RequestParam String makerName) {
+        return modelService.getAllModelsOfMaker(makerName);
+    }
+
     @PostMapping
     @PreAuthorize("principal.email == 'riezenmark@gmail.com'")
     @JsonView(Views.IdName.class)

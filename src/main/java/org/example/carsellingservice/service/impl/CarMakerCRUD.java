@@ -1,5 +1,6 @@
 package org.example.carsellingservice.service.impl;
 
+import org.example.carsellingservice.dao.MakerDao;
 import org.example.carsellingservice.domain.Maker;
 import org.example.carsellingservice.repository.CarMakerRepository;
 import org.example.carsellingservice.service.api.CarMakerService;
@@ -22,7 +23,12 @@ public class CarMakerCRUD implements CarMakerService {
 
     @Override
     public Iterable<Maker> getAll() {
-        return null;
+        return makerRepository.findAll();
+    }
+
+    @Override
+    public Iterable<MakerDao> getAllWithoutModels() {
+        return makerRepository.getAllWithoutModels();
     }
 
     @Override

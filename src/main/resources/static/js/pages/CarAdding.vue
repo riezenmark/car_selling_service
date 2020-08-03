@@ -2,16 +2,19 @@
     <v-card>
         <v-form class="ma-5">
             <v-row>
-            <v-col class="col-12 col-md-6">
-                <v-combobox v-model="markText" label="Марка" @change="enableDisableModel" clearable></v-combobox>
-                <v-text-field v-model="price" label="Цена" @change="enableDisableBtn" @keyup="enableDisableBtn"></v-text-field>
-                <v-file-input label="Фото"></v-file-input>
-            </v-col>
-            <v-col class="col-12 col-md-6">
-                <v-autocomplete v-model="model.text" :disabled="model.disabled" label="Модель" @change="enableDisableBtn"
-                            clearable></v-autocomplete>
-                <v-combobox label="Год выпуска" clearable></v-combobox>
-            </v-col>
+                <v-col class="col-12 col-md-6">
+                    <v-autocomplete v-model="markText" label="Марка" @change="enableDisableModel"
+                                    clearable :items="makerNames"></v-autocomplete>
+                    <v-text-field v-model="price" label="Цена" @change="enableDisableBtn"
+                                  @keyup="enableDisableBtn"></v-text-field>
+                    <v-file-input label="Фото"></v-file-input>
+                </v-col>
+                <v-col class="col-12 col-md-6">
+                    <v-autocomplete v-model="model.text" :disabled="model.disabled" label="Модель"
+                                    @change="enableDisableBtn"
+                                    clearable :items="modelNames"></v-autocomplete>
+                    <v-combobox label="Год выпуска" clearable></v-combobox>
+                </v-col>
             </v-row>
             <v-row justify="space-around">
                 <v-col class="col-12 col-md-4">
@@ -40,9 +43,14 @@
 </template>
 
 <script>
+    import {mapState} from "vuex";
+
     export default {
+        computed: mapState(['makers']),
         data() {
             return {
+                makerNames: [],
+                modelNames: [],
                 markText: '',
                 model: {
                     text: '',
@@ -53,26 +61,33 @@
             }
         },
         methods: {
+            getModels() {
+                this.$resource('/models').get({makerName: this.markText}).then(result =>
+                    result.json().then(data =>
+                        data.forEach(model => this.modelNames.push(model.name))
+                    )
+                )
+            },
             enableDisableModel() {
+                this.model.text = ''
+                this.modelNames = []
                 if (this.markText) {
                     this.model.disabled = false
+                    this.getModels()
                 } else {
                     this.model.disabled = true
-                    this.model.text = ''
                     this.enableDisableBtn()
                 }
             },
             enableDisableBtn() {
-                if (this.model.text && this.price) {
-                    this.addBtnDisabled = false
-                } else {
-                    this.addBtnDisabled = true
-                    this.year.text = ''
-                }
+                this.addBtnDisabled = !(this.model.text && this.price);
             },
             closeAddingPage() {
                 this.$router.back()
             }
+        },
+        created() {
+            this.makers.forEach(maker => this.makerNames.push(maker.name))
         }
     }
 </script>
