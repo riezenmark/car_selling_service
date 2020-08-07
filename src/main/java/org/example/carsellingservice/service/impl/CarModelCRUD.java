@@ -2,10 +2,12 @@ package org.example.carsellingservice.service.impl;
 
 import org.example.carsellingservice.domain.Maker;
 import org.example.carsellingservice.domain.Model;
+import org.example.carsellingservice.repository.CarMakerRepository;
 import org.example.carsellingservice.repository.CarModelRepository;
 import org.example.carsellingservice.service.api.CarModelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -14,12 +16,12 @@ import java.util.Set;
 public class CarModelCRUD implements CarModelService {
 
     private final CarModelRepository modelRepository;
-    private final CarMakerCRUD makerService;
+    private final CarMakerRepository makerRepository;
 
     @Autowired
-    public CarModelCRUD(CarModelRepository modelRepository, CarMakerCRUD makerService) {
+    public CarModelCRUD(CarModelRepository modelRepository, CarMakerRepository makerRepository) {
         this.modelRepository = modelRepository;
-        this.makerService = makerService;
+        this.makerRepository = makerRepository;
     }
 
     @Override
@@ -35,14 +37,14 @@ public class CarModelCRUD implements CarModelService {
     @Override
     public Model addOne(Model model) {
         if (modelRepository.findByName(model.getName()) == null) {
-            String makerName = model.getManufacturer().getName();
-            Maker maker = makerService.getByName(makerName);
+            String makerName = model.getMaker().getName();
+            Maker maker = makerRepository.findByName(makerName);
             if (maker == null) {
                 maker = new Maker();
                 maker.setName(makerName);
-                maker = makerService.addOne(maker);
+                maker = makerRepository.save(maker);
             }
-            model.setManufacturer(maker);
+            model.setMaker(maker);
             Set<Model> makersModels = maker.getModels();
             if (makersModels == null) {
                 makersModels = new HashSet<>();
@@ -57,18 +59,40 @@ public class CarModelCRUD implements CarModelService {
 
     @Override
     public Iterable<Model> getAllModelsOfMaker(String makerName) {
-        System.out.println(makerName);
-        System.out.println(makerService.getByName(makerName));
-        return makerService.getByName(makerName).getModels();
+        return makerRepository.findByName(makerName).getModels();
     }
 
     @Override
-    public Model updateOne(Model model) {
-        return null;
+    public void updateOne(Model previousModel, Model model) {
+        previousModel = modelRepository.findByName(previousModel.getName());
+        if (previousModel != null) {
+            previousModel.setName(model.getName());
+            Maker maker = makerRepository.findByName(previousModel.getMaker().getName());
+            if (maker != null) {
+                maker.setName(model.getMaker().getName());
+                makerRepository.save(maker);
+                previousModel.setMaker(maker);
+                modelRepository.save(previousModel);
+            }
+        }
     }
 
     @Override
-    public Model deleteOne(Model model) {
-        return null;
+    public void deleteOne(@RequestBody Model model) {
+        Model modelFromDatabase = modelRepository.findByName(model.getName());
+        if (modelFromDatabase != null) {
+            modelRepository.delete(modelFromDatabase);
+            Maker maker = makerRepository.findByName(model.getMaker().getName());
+            if (maker != null) {
+                Set<Model> makersModels = maker.getModels();
+                makersModels.remove(model);
+                if (makersModels.size() == 0) {
+                    makerRepository.delete(maker);
+                } else {
+                    maker.setModels(makersModels);
+                    makerRepository.save(maker);
+                }
+            }
+        }
     }
 }

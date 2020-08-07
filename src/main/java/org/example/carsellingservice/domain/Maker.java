@@ -2,6 +2,8 @@ package org.example.carsellingservice.domain;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import org.example.carsellingservice.domain.view.Views;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -15,7 +17,7 @@ public class Maker {
     private int id;
     @JsonView(Views.Name.class)
     private String name;
-    @OneToMany
+    @OneToMany(mappedBy = "maker", cascade = CascadeType.REMOVE)
     private Set<Model> models;
 
     public int getId() {

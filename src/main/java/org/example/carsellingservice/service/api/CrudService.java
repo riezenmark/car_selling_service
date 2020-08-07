@@ -7,7 +7,7 @@ public interface CrudService<T, ID> {
 
     T addOne(T t);
 
-    T updateOne(T t);
+    void updateOne(T previousT, T t);
 
-    T deleteOne(T t);
+    void deleteOne(T t);
 }

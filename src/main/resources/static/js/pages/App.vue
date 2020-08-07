@@ -8,26 +8,27 @@
                                 placeholder="Любая" clearable dense :items="modelNames"></v-autocomplete>
                 <v-row no-gutters>
                     <v-col>
-                        <v-text-field outlined class="rounded-r-0" label="Цена от" placeholder="0" dense></v-text-field>
+                        <v-text-field v-model="priceFrom" outlined class="rounded-r-0" label="Цена от" placeholder="0"
+                                      dense></v-text-field>
                     </v-col>
                     <v-col>
-                        <v-text-field outlined class="rounded-l-0" label="до, руб." placeholder="max"
+                        <v-text-field v-model="priceTo" outlined class="rounded-l-0" label="до, руб." placeholder="max"
                                       dense></v-text-field>
                     </v-col>
                 </v-row>
                 <v-row no-gutters>
                     <v-col>
-                        <v-text-field outlined class="rounded-r-0" label="Год от" placeholder="1960"
-                                      dense></v-text-field>
+                        <v-autocomplete outlined class="rounded-r-0" label="Год от" placeholder="1960"
+                                      dense :items="years"></v-autocomplete>
                     </v-col>
                     <v-col>
-                        <v-text-field
+                        <v-autocomplete
                                 outlined
                                 class="rounded-l-0"
                                 label="до"
                                 :placeholder="new Date().getFullYear().toString()"
-                                dense>
-                        </v-text-field>
+                                dense :items="years">
+                        </v-autocomplete>
                     </v-col>
                 </v-row>
                 <span>Коробка передач</span>
@@ -90,9 +91,13 @@
     import {mapState} from 'vuex'
 
     export default {
+
         data: () => ({
             makerNames: [],
             modelNames: [],
+            priceFrom: '',
+            priceTo: '',
+            years: [],
             drawer: null,
             mark: '',
             model: {
@@ -140,6 +145,22 @@
         },
         created() {
             this.makers.forEach(maker => this.makerNames.push(maker.name))
+            const year = new Date().getFullYear()
+            for (let i = 1960; i <= year; i++) {
+                this.years.push(i)
+            }
+        },
+        watch: {
+            'priceFrom'(value) {
+                this.$nextTick(() =>
+                    this.priceFrom = value.replace(/[^0-9]/g, '')
+                )
+            },
+            'priceTo'(value) {
+                this.$nextTick(() =>
+                    this.priceTo = value.replace(/[^0-9]/g, '')
+                )
+            }
         }
     }
 </script>

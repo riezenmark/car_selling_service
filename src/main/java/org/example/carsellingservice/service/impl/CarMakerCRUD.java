@@ -17,37 +17,8 @@ public class CarMakerCRUD implements CarMakerService {
         this.makerRepository = makerRepository;
     }
 
-    public Maker getByName(String name) {
-        return makerRepository.findByName(name);
-    }
-
-    @Override
-    public Iterable<Maker> getAll() {
-        return makerRepository.findAll();
-    }
-
     @Override
     public Iterable<MakerDao> getAllWithoutModels() {
         return makerRepository.getAllWithoutModels();
-    }
-
-    @Override
-    public Iterable<Maker> getAllWithReferenceID(Integer integer) {
-        return null;
-    }
-
-    @Override
-    public Maker addOne(Maker maker) {
-        return makerRepository.save(maker);
-    }
-
-    @Override
-    public Maker updateOne(Maker maker) {
-        return null;
-    }
-
-    @Override
-    public Maker deleteOne(Maker maker) {
-        return null;
     }
 }

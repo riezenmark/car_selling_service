@@ -1,8 +1,9 @@
 package org.example.carsellingservice.domain;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.example.carsellingservice.domain.view.Views;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 
@@ -16,7 +17,7 @@ public class Model {
     @JsonView(Views.Name.class)
     private String name;
     @ManyToOne(fetch = FetchType.EAGER)
-    private Maker manufacturer;
+    private Maker maker;
 
     public Long getId() {
         return id;
@@ -34,11 +35,11 @@ public class Model {
         this.name = name;
     }
 
-    public Maker getManufacturer() {
-        return manufacturer;
+    public Maker getMaker() {
+        return maker;
     }
 
-    public void setManufacturer(Maker manufacturer) {
-        this.manufacturer = manufacturer;
+    public void setMaker(Maker manufacturer) {
+        this.maker = manufacturer;
     }
 }

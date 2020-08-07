@@ -31,4 +31,16 @@ public class CarModelController {
     public Model addNewModel(@RequestBody Model model) {
         return modelService.addOne(model);
     }
+
+    @PutMapping
+    @PreAuthorize("principal.email == 'riezenmark@gmail.com'")
+    public void updateModel(@RequestBody Model[] models) {
+        modelService.updateOne(models[0], models[1]);
+    }
+
+    @DeleteMapping
+    @PreAuthorize("principal.email == 'riezenmark@gmail.com'")
+    public void deleteModel(@RequestBody Model model) {
+        modelService.deleteOne(model);
+    }
 }

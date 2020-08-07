@@ -13,7 +13,7 @@
                     <v-autocomplete v-model="model.text" :disabled="model.disabled" label="Модель"
                                     @change="enableDisableBtn"
                                     clearable :items="modelNames"></v-autocomplete>
-                    <v-combobox label="Год выпуска" clearable></v-combobox>
+                    <v-autocomplete label="Год выпуска" :items="years" clearable></v-autocomplete>
                 </v-col>
             </v-row>
             <v-row justify="space-around">
@@ -51,6 +51,7 @@
             return {
                 makerNames: [],
                 modelNames: [],
+                years: [],
                 markText: '',
                 model: {
                     text: '',
@@ -88,6 +89,17 @@
         },
         created() {
             this.makers.forEach(maker => this.makerNames.push(maker.name))
+            const year = new Date().getFullYear()
+            for (let i = 1960; i <= year; i++) {
+                this.years.push(i)
+            }
+        },
+        watch: {
+            'price'(value) {
+                this.$nextTick(() =>
+                    this.price = value.replace(/[^0-9]/g, '')
+                )
+            }
         }
     }
 </script>
