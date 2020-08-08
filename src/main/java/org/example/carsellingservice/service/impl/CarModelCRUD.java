@@ -30,11 +30,6 @@ public class CarModelCRUD implements CarModelService {
     }
 
     @Override
-    public Iterable<Model> getAllWithReferenceID(Integer integer) {
-        return null;
-    }
-
-    @Override
     public Model addOne(Model model) {
         if (modelRepository.findByName(model.getName()) == null) {
             String makerName = model.getMaker().getName();

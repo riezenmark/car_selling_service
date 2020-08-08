@@ -6,6 +6,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -17,8 +18,8 @@ public class User implements Serializable {
     private String email;
     private String gender;
     private String locale;
-    @OneToMany(fetch = FetchType.EAGER)
-    private List<Car> addedCars;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private Set<Car> addedCars;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime lastVisit;
@@ -71,11 +72,11 @@ public class User implements Serializable {
         this.locale = locale;
     }
 
-    public List<Car> getAddedCars() {
+    public Set<Car> getAddedCars() {
         return addedCars;
     }
 
-    public void setAddedCars(List<Car> addedCars) {
+    public void setAddedCars(Set<Car> addedCars) {
         this.addedCars = addedCars;
     }
 

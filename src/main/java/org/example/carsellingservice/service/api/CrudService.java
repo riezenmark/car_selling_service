@@ -1,9 +1,7 @@
 package org.example.carsellingservice.service.api;
 
-public interface CrudService<T, ID> {
+public interface CrudService<T> {
     Iterable<T> getAll();
-
-    Iterable<T> getAllWithReferenceID(ID id);
 
     T addOne(T t);
 

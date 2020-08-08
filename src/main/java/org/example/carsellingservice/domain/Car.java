@@ -8,17 +8,19 @@ public class Car {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private Maker maker;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private Model model;
-    private double price;
-    private boolean yearOfProduction;
+    private int price;
+    private int yearOfProduction;
     @Enumerated(EnumType.STRING)
     private Transmission transmission;
     @Enumerated(EnumType.STRING)
     private EngineType engineType;
-    private float engineCapacity;
+    private String filename;
+    @ManyToOne
+    private User user;
 
     public Long getId() {
         return id;
@@ -44,19 +46,19 @@ public class Car {
         this.model = model;
     }
 
-    public double getPrice() {
+    public int getPrice() {
         return price;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(int price) {
         this.price = price;
     }
 
-    public boolean isYearOfProduction() {
+    public int getYearOfProduction() {
         return yearOfProduction;
     }
 
-    public void setYearOfProduction(boolean yearOfProduction) {
+    public void setYearOfProduction(int yearOfProduction) {
         this.yearOfProduction = yearOfProduction;
     }
 
@@ -76,11 +78,19 @@ public class Car {
         this.engineType = engineType;
     }
 
-    public float getEngineCapacity() {
-        return engineCapacity;
+    public String getFilename() {
+        return filename;
     }
 
-    public void setEngineCapacity(float engineCapacity) {
-        this.engineCapacity = engineCapacity;
+    public void setFilename(String filename) {
+        this.filename = filename;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }
