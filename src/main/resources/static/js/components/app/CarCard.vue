@@ -11,7 +11,7 @@
                     <v-btn icon class="indigo--text mx-2">
                         <v-icon>mdi-menu</v-icon>
                     </v-btn>
-                    <v-btn icon class="indigo--text">
+                    <v-btn icon class="indigo--text" @click="del">
                         <v-icon>mdi-trash-can-outline</v-icon>
                     </v-btn>
                 </div>
@@ -34,7 +34,7 @@
     import {mapState} from "vuex";
 
     export default {
-        props: ['car'],
+        props: ['car', 'deleteCar'],
         data() {
             return {
                 show: false,
@@ -42,6 +42,11 @@
             }
         },
         computed: mapState(['profile']),
+        methods: {
+            del() {
+                this.deleteCar(this.car)
+            }
+        },
         created() {
             if (this.profile) {
                 if (this.car.user.id && this.car.user.id === this.profile.id) {

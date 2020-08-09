@@ -60,4 +60,9 @@ public class CarController {
                 user, modelName, makerName, price, yearOfProduction, transmission, engineType, file
         );
     }
+
+    @DeleteMapping
+    public void deleteCarWithId(@RequestParam Long id, @AuthenticationPrincipal User user) {
+        carService.deleteCarWithId(id, user);
+    }
 }

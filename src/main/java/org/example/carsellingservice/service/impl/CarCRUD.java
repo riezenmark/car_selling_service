@@ -153,16 +153,6 @@ public class CarCRUD implements CarService {
         }
     }
 
-    private void setFile(Car car, MultipartFile file) throws IOException {
-        File uploadDirectory = new File(uploadPath);
-        if (!uploadDirectory.exists()) {
-            uploadDirectory.mkdir();
-        }
-        String uniqueFilename = UUID.randomUUID().toString() + "." + file.getOriginalFilename();
-        file.transferTo(new File(uploadPath + "/" + uniqueFilename));
-        car.setFilename(uniqueFilename);
-    }
-
     @Override
     public Integer getMaximumCarPrice() {
         return carRepository.getMaximumCarPrice();
@@ -172,5 +162,33 @@ public class CarCRUD implements CarService {
     public Iterable<Car> getCarsOfUserWithId(String id) {
         User user = userRepository.findById(id).orElse(null);
         return carRepository.findByUser(user);
+    }
+
+    @Override
+    public void deleteCarWithId(Long id, User user) {
+        user = userRepository.findById(user.getId()).orElse(null);
+        Car car = carRepository.findById(id).orElse(null);
+        if (user != null && car != null) {
+            String filename = car.getFilename();
+            File file = new File(uploadPath + "/" + filename);
+            if (file.exists()) {
+                file.delete();
+            }
+            Set<Car> usersCars = user.getAddedCars();
+            usersCars = usersCars.stream().filter(c -> !c.getId().equals(id)).collect(Collectors.toSet());
+            user.setAddedCars(usersCars);
+            userRepository.save(user);
+            carRepository.delete(car);
+        }
+    }
+
+    private void setFile(Car car, MultipartFile file) throws IOException {
+        File uploadDirectory = new File(uploadPath);
+        if (!uploadDirectory.exists()) {
+            uploadDirectory.mkdir();
+        }
+        String uniqueFilename = UUID.randomUUID().toString() + "." + file.getOriginalFilename();
+        file.transferTo(new File(uploadPath + "/" + uniqueFilename));
+        car.setFilename(uniqueFilename);
     }
 }

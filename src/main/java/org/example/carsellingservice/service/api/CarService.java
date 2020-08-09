@@ -24,4 +24,6 @@ public interface CarService {
     Integer getMaximumCarPrice();
 
     Iterable<Car> getCarsOfUserWithId(String id);
+
+    void deleteCarWithId(Long id, User user);
 }
