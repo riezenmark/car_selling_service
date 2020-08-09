@@ -24,12 +24,6 @@ public class CarModelCRUD implements CarModelService {
         this.makerRepository = makerRepository;
     }
 
-    @Override
-    public Iterable<Model> getAll() {
-        return null;
-    }
-
-    @Override
     public Model addOne(Model model) {
         if (modelRepository.findByName(model.getName()) == null) {
             String makerName = model.getMaker().getName();
@@ -57,7 +51,6 @@ public class CarModelCRUD implements CarModelService {
         return makerRepository.findByName(makerName).getModels();
     }
 
-    @Override
     public void updateOne(Model previousModel, Model model) {
         previousModel = modelRepository.findByName(previousModel.getName());
         if (previousModel != null) {
@@ -72,7 +65,6 @@ public class CarModelCRUD implements CarModelService {
         }
     }
 
-    @Override
     public void deleteOne(@RequestBody Model model) {
         Model modelFromDatabase = modelRepository.findByName(model.getName());
         if (modelFromDatabase != null) {

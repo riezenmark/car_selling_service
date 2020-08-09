@@ -13,7 +13,7 @@
 
 <script>
     export default {
-        props: ['user', 'deleteUser', 'users'],
+        props: ['user', 'deleteUser'],
         methods: {
             del() {
                 this.deleteUser(this.user)

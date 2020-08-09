@@ -29,7 +29,7 @@
                       :key="user.id"
                       :user="user"
                       :deleteUser="deleteUser"
-                      :users="users"/>
+            />
             </tbody>
         </v-simple-table>
     </div>

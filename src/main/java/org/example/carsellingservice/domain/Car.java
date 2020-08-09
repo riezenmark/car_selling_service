@@ -1,24 +1,39 @@
 package org.example.carsellingservice.domain;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import org.example.carsellingservice.domain.view.Views;
+
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "cars")
-public class Car {
+public class Car implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonView(Views.Id.class)
     private Long id;
+    @JsonView(Views.IdName.class)
     @ManyToOne(fetch = FetchType.EAGER)
     private Maker maker;
+    @JsonView(Views.IdName.class)
     @ManyToOne(fetch = FetchType.EAGER)
     private Model model;
+    @JsonView(Views.Name.class)
     private int price;
+    @JsonView(Views.Name.class)
     private int yearOfProduction;
     @Enumerated(EnumType.STRING)
+    @JsonView(Views.Name.class)
     private Transmission transmission;
     @Enumerated(EnumType.STRING)
+    @JsonView(Views.Name.class)
     private EngineType engineType;
+    @JsonView(Views.Name.class)
     private String filename;
+    @JsonView(Views.IdNameEmail.class)
     @ManyToOne
     private User user;
 
