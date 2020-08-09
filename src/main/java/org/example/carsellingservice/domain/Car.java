@@ -1,8 +1,6 @@
 package org.example.carsellingservice.domain;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonView;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.example.carsellingservice.domain.view.Views;
 
 import javax.persistence.*;

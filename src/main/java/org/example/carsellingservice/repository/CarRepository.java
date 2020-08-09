@@ -13,4 +13,6 @@ public interface CarRepository extends CrudRepository<Car, Long> {
 
     @Query("SELECT max(c.price) from Car c")
     Integer getMaximumCarPrice();
+
+    Iterable<Car> findByUser(User user);
 }

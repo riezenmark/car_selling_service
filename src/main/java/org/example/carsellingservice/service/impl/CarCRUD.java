@@ -49,7 +49,7 @@ public class CarCRUD implements CarService {
             String manufacturer, String model, Integer priceFrom, Integer priceTo,
             Integer yearFrom, Integer yearTo, List<String> transmission, List<String> engineType
     ) {
-        if (manufacturer != null) {
+        if (manufacturer != null && !manufacturer.equals("")) {
             List<Car> cars = StreamSupport.stream(
                     carRepository.findByMaker(
                             makerRepository.findByName(manufacturer)
@@ -166,5 +166,11 @@ public class CarCRUD implements CarService {
     @Override
     public Integer getMaximumCarPrice() {
         return carRepository.getMaximumCarPrice();
+    }
+
+    @Override
+    public Iterable<Car> getCarsOfUserWithId(String id) {
+        User user = userRepository.findById(id).orElse(null);
+        return carRepository.findByUser(user);
     }
 }

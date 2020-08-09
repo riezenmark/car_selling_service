@@ -25,12 +25,6 @@ public class CarController {
     }
 
     @GetMapping
-    @JsonView(Views.IdNameEmail.class)
-    public Iterable<Car> getAllCars() {
-        return carService.getAll();
-    }
-
-    @GetMapping("search")
     public Iterable<Car> searchForCars(
             @RequestParam(required = false) String manufacturer,
             @RequestParam(required = false) String model,
@@ -44,6 +38,11 @@ public class CarController {
         return carService.findCars(
                 manufacturer, model, priceFrom, priceTo, yearFrom, yearTo, transmission, engineType
         );
+    }
+
+    @GetMapping("{id}")
+    public Iterable<Car> getCarsOfUser(@PathVariable String id) {
+        return carService.getCarsOfUserWithId(id);
     }
 
     @PostMapping

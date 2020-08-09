@@ -66,7 +66,7 @@
                 <v-icon>mdi-plus</v-icon>
             </v-btn>
             <v-btn v-if="!profile" text class="white--text" href="/login">Вход и регистрация</v-btn>
-            <span v-if="profile" class="white--text mx-2">{{ profile.name }}</span>
+            <v-btn v-if="profile" outlined class="white--text mx-2" @click="usersCars">{{ profile.name }}</v-btn>
             <v-btn v-if="profile" icon href="/logout">
                 <v-icon>mdi-exit-to-app</v-icon>
             </v-btn>
@@ -133,11 +133,12 @@
                 this.modelNames = []
                 if (this.mark) {
                     this.model.disabled = false
+                    this.findBtnDisabled = false
                     this.getModels()
                 } else {
                     this.model.disabled = true
+                    this.findBtnDisabled = true
                 }
-                this.findBtnDisabled = false
             },
             adminPage() {
                 this.$router.push('/admin')
@@ -170,7 +171,7 @@
                 if (this.ELECTRO === true)
                     engineType.push('ELECTRO')
                 this.cars = []
-                this.$resource('/cars/search').get(
+                this.$resource('/cars').get(
                     {
                         manufacturer: this.mark,
                         model: this.model.text,
@@ -186,9 +187,18 @@
                         data => data.forEach(car => this.cars.push(car))
                     )
                 )
-                this.mark = ''
-                this.enableDisableModel()
-                this.findBtnDisabled = true
+            },
+            usersCars() {
+                if (this.profile) {
+                    this.cars = []
+                    this.$resource('/cars/' + this.profile.id).get().then(result =>
+                        result.json().then(
+                            data => data.forEach(
+                                car => this.cars.push(car)
+                            )
+                        )
+                    )
+                }
             }
         },
         props: {

@@ -22,4 +22,6 @@ public interface CarService {
     );
 
     Integer getMaximumCarPrice();
+
+    Iterable<Car> getCarsOfUserWithId(String id);
 }
