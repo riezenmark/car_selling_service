@@ -1,6 +1,8 @@
 package org.example.carsellingservice.domain;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import lombok.Getter;
+import lombok.Setter;
 import org.example.carsellingservice.domain.view.Views;
 
 import javax.persistence.*;
@@ -8,6 +10,8 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "models")
+@Getter
+@Setter
 public class Model implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,28 +21,4 @@ public class Model implements Serializable {
     private String name;
     @ManyToOne(fetch = FetchType.EAGER)
     private Maker maker;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Maker getMaker() {
-        return maker;
-    }
-
-    public void setMaker(Maker manufacturer) {
-        this.maker = manufacturer;
-    }
 }

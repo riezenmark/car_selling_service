@@ -18,6 +18,9 @@
             del() {
                 this.deleteUser(this.user)
             }
+        },
+        created() {
+            console.log(this.user)
         }
     }
 </script>
