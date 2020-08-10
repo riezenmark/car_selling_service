@@ -1,5 +1,6 @@
 package org.example.carsellingservice.web.controller;
 
+import org.example.carsellingservice.domain.Car;
 import org.example.carsellingservice.domain.User;
 import org.example.carsellingservice.service.api.CarMakerService;
 import org.example.carsellingservice.service.api.CarService;
@@ -31,6 +32,8 @@ public class MainController {
         HashMap<Object, Object> frontendData = new HashMap<>();
         if (user != null) {
             frontendData.put("profile", user);
+            Iterable<Car> addedCars = carService.getCarsOfUserWithId(user.getId());
+            frontendData.put("addedCars", addedCars);
         }
         frontendData.put("makers", makerService.getAllWithoutModels());
         frontendData.put("maximumPrice", carService.getMaximumCarPrice());

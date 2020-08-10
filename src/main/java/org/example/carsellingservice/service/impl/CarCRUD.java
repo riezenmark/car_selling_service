@@ -168,7 +168,7 @@ public class CarCRUD implements CarService {
     public void deleteCarWithId(Long id, User user) {
         user = userRepository.findById(user.getId()).orElse(null);
         Car car = carRepository.findById(id).orElse(null);
-        if (user != null && car != null) {
+        if (user != null && car != null && user.getAddedCars().contains(car)) {
             String filename = car.getFilename();
             File file = new File(uploadPath + "/" + filename);
             if (file.exists()) {
@@ -179,6 +179,23 @@ public class CarCRUD implements CarService {
             user.setAddedCars(usersCars);
             userRepository.save(user);
             carRepository.delete(car);
+        }
+    }
+
+    @Override
+    public void updateCar(Car car, User user) {
+        user = userRepository.findById(user.getId()).orElse(null);
+        if (user != null && user.getAddedCars().contains(car)) {
+            Car carFromDatabase = carRepository.findById(car.getId()).orElse(null);
+            if (carFromDatabase != null) {
+                carFromDatabase.setMaker(makerRepository.findByName(car.getMaker().getName()));
+                carFromDatabase.setModel(modelRepository.findByName(car.getModel().getName()));
+                carFromDatabase.setPrice(car.getPrice());
+                carFromDatabase.setYearOfProduction(car.getYearOfProduction());
+                carFromDatabase.setEngineType(car.getEngineType());
+                carFromDatabase.setTransmission(car.getTransmission());
+                carRepository.save(carFromDatabase);
+            }
         }
     }
 

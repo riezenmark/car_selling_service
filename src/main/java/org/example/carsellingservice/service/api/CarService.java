@@ -26,4 +26,6 @@ public interface CarService {
     Iterable<Car> getCarsOfUserWithId(String id);
 
     void deleteCarWithId(Long id, User user);
+
+    void updateCar(Car car, User user);
 }

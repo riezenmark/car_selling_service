@@ -61,6 +61,11 @@ public class CarController {
         );
     }
 
+    @PutMapping
+    public void updateCar(@RequestBody Car car, @AuthenticationPrincipal User user) {
+        carService.updateCar(car, user);
+    }
+
     @DeleteMapping
     public void deleteCarWithId(@RequestParam Long id, @AuthenticationPrincipal User user) {
         carService.deleteCarWithId(id, user);

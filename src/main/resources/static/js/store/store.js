@@ -7,6 +7,7 @@ export default new Vuex.Store({
     state: {
         profile: frontendData.profile,
         makers: frontendData.makers,
-        maximumPrice: frontendData.maximumPrice
+        maximumPrice: frontendData.maximumPrice,
+        addedCars: frontendData.addedCars
     }
 })

@@ -8,7 +8,7 @@
             <v-card-actions>
                 <v-btn outlined class="indigo--text">Send Mail</v-btn>
                 <div v-if="showButtons">
-                    <v-btn icon class="indigo--text mx-2">
+                    <v-btn icon class="indigo--text mx-2" @click="update">
                         <v-icon>mdi-menu</v-icon>
                     </v-btn>
                     <v-btn icon class="indigo--text" @click="del">
@@ -45,6 +45,9 @@
         methods: {
             del() {
                 this.deleteCar(this.car)
+            },
+            update() {
+                this.$router.push('/update/' + this.car.id)
             }
         },
         created() {
