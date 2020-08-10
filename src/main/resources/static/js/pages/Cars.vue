@@ -5,7 +5,7 @@
 </template>
 
 <script>
-    import CarCard from 'components/app/CarCard.vue'
+    import CarCard from 'components/cars/CarCard.vue'
 
     export default {
         components: {

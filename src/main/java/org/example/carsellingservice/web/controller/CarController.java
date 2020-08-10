@@ -1,9 +1,7 @@
 package org.example.carsellingservice.web.controller;
 
-import com.fasterxml.jackson.annotation.JsonView;
 import org.example.carsellingservice.domain.Car;
 import org.example.carsellingservice.domain.User;
-import org.example.carsellingservice.domain.view.Views;
 import org.example.carsellingservice.service.api.CarService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

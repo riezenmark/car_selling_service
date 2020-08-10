@@ -1,12 +1,11 @@
 <template>
     <v-col class="col-12 col-md-4">
         <v-card>
-            <v-img :src="/img/+car.filename">
+            <v-img v-if="car.filename" :src="/img/+car.filename">
             </v-img>
             <v-card-title>{{car.maker.name}}<v-spacer></v-spacer>{{car.price}}</v-card-title>
             <v-card-subtitle>{{car.model.name}}<v-spacer></v-spacer>{{car.yearOfProduction}}</v-card-subtitle>
             <v-card-actions>
-                <v-btn outlined class="indigo--text">Send Mail</v-btn>
                 <div v-if="showButtons">
                     <v-btn icon class="indigo--text mx-2" @click="update">
                         <v-icon>mdi-menu</v-icon>
@@ -41,7 +40,7 @@
                 showButtons: false
             }
         },
-        computed: mapState(['profile']),
+        computed: mapState(['profile', 'makers']),
         methods: {
             del() {
                 this.deleteCar(this.car)
@@ -58,6 +57,13 @@
                 if (this.car.user === this.profile.id) {
                     this.showButtons = true
                 }
+            }
+            if (!this.car.maker.id) {
+                this.makers.forEach(maker => {
+                    if (maker.id === this.car.maker) {
+                        this.car.maker = maker
+                    }
+                })
             }
         }
     }

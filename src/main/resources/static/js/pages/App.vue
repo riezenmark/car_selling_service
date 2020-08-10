@@ -189,6 +189,9 @@
                 )
             },
             usersCars() {
+                if (this.$route.path !== '/') {
+                    this.$router.push('/')
+                }
                 if (this.profile) {
                     this.cars = []
                     this.$resource('/cars/' + this.profile.id).get().then(result =>

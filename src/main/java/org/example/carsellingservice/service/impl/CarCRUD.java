@@ -17,6 +17,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+@SuppressWarnings("ResultOfMethodCallIgnored")
 @Service
 public class CarCRUD implements CarService {
 
@@ -49,75 +50,18 @@ public class CarCRUD implements CarService {
             String manufacturer, String model, Integer priceFrom, Integer priceTo,
             Integer yearFrom, Integer yearTo, List<String> transmission, List<String> engineType
     ) {
+        List<Car> cars;
         if (manufacturer != null && !manufacturer.equals("")) {
-            List<Car> cars = StreamSupport.stream(
+            cars = StreamSupport.stream(
                     carRepository.findByMaker(
                             makerRepository.findByName(manufacturer)
                     ).spliterator(), false
             ).collect(Collectors.toList());
-            if (model != null && !model.equals("")) {
-                cars = cars.stream().filter(car -> car.getModel().getName().equals(model)).collect(Collectors.toList());
-            }
-            if (priceFrom == null || priceFrom < 0) {
-                priceFrom = 0;
-            }
-            if (priceTo == null || priceTo < 0) {
-                priceTo = 0;
-            }
-            if (priceFrom > priceTo) {
-                int tmp = priceFrom;
-                priceFrom = priceTo;
-                priceTo = tmp;
-            }
-            if (priceFrom != 0) {
-                int finalPriceFrom = priceFrom;
-                cars = cars.stream().filter(
-                        car -> car.getPrice() >= finalPriceFrom
-                ).collect(Collectors.toList());
-            }
-            if (priceTo != 0) {
-                int finalPriceTo = priceTo;
-                cars = cars.stream().filter(
-                        car -> car.getPrice() <= finalPriceTo
-                ).collect(Collectors.toList());
-            }
-            if (yearFrom == null || yearFrom < 0) {
-                yearFrom = 0;
-            }
-            if (yearTo == null || yearTo < 0) {
-                yearTo = 0;
-            }
-            if (yearFrom > yearTo) {
-                int tmp = yearFrom;
-                yearFrom = yearTo;
-                yearTo = tmp;
-            }
-            if (yearFrom != 0) {
-                int finalYearFrom = yearFrom;
-                cars = cars.stream().filter(
-                        car -> car.getYearOfProduction() >= finalYearFrom
-                ).collect(Collectors.toList());
-            }
-            if (yearTo != 0) {
-                int finalYearTo = yearTo;
-                cars = cars.stream().filter(
-                        car -> car.getYearOfProduction() <= finalYearTo
-                ).collect(Collectors.toList());
-            }
-            if (transmission != null && transmission.size() != 0) {
-                cars = cars.stream().filter(
-                        car -> transmission.contains(car.getTransmission().name())
-                ).collect(Collectors.toList());
-            }
-            if (engineType != null && engineType.size() != 0) {
-                cars = cars.stream().filter(
-                        car -> engineType.contains(car.getEngineType().name())
-                ).collect(Collectors.toList());
-            }
-            return cars;
+            cars = this.filterCars(cars, model, priceFrom, priceTo, yearFrom, yearTo, transmission, engineType);
         } else {
-            return this.getAll();
+            cars = StreamSupport.stream(this.getAll().spliterator(), false).collect(Collectors.toList());
         }
+        return cars;
     }
 
     @Override
@@ -127,29 +71,11 @@ public class CarCRUD implements CarService {
     ) throws IOException {
         Maker maker = makerRepository.findByName(makerName);
         Model model = modelRepository.findByName(modelName);
-        if (carRepository.findByMakerAndModelAndYearOfProductionAndEngineTypeAndTransmission(
-                maker, model, yearOfProduction,
-                EngineType.valueOf(engineType),
-                Transmission.valueOf(transmission)
-        ) == null) {
-            Car car = new Car();
-            car.setMaker(maker);
-            car.setModel(model);
-            car.setPrice(price);
-            car.setYearOfProduction(yearOfProduction);
-            car.setTransmission(Transmission.valueOf(transmission));
-            car.setEngineType(EngineType.valueOf(engineType));
-            if (file != null && !file.getOriginalFilename().isEmpty()) {
-                setFile(car, file);
-            }
-            Set<Car> userCars = user.getAddedCars();
-            if (userCars == null) {
-                userCars = new HashSet<>();
-            }
-            userCars.add(car);
-            user = userRepository.save(user);
-            car.setUser(user);
-            carRepository.save(car);
+        if (this.thereIsNoCarWithFields(maker, model, yearOfProduction, engineType, transmission)) {
+            Car car = this.createNewCarWithFields(maker, model, price, yearOfProduction, transmission, engineType);
+            this.uploadFileIfExists(car, file);
+            this.addCarForUser(car, user);
+            this.saveCarAndUser(car, user);
         }
     }
 
@@ -168,15 +94,9 @@ public class CarCRUD implements CarService {
     public void deleteCarWithId(Long id, User user) {
         user = userRepository.findById(user.getId()).orElse(null);
         Car car = carRepository.findById(id).orElse(null);
-        if (user != null && car != null && user.getAddedCars().contains(car)) {
-            String filename = car.getFilename();
-            File file = new File(uploadPath + "/" + filename);
-            if (file.exists()) {
-                file.delete();
-            }
-            Set<Car> usersCars = user.getAddedCars();
-            usersCars = usersCars.stream().filter(c -> !c.getId().equals(id)).collect(Collectors.toSet());
-            user.setAddedCars(usersCars);
+        if (this.userHasCar(user, car)) {
+            this.deleteFileIfExists(car.getFilename());
+            this.removeCarWithIdFromUserCars(user, id);
             userRepository.save(user);
             carRepository.delete(car);
         }
@@ -185,18 +105,164 @@ public class CarCRUD implements CarService {
     @Override
     public void updateCar(Car car, User user) {
         user = userRepository.findById(user.getId()).orElse(null);
-        if (user != null && user.getAddedCars().contains(car)) {
+        if (this.userHasCar(user, car)) {
             Car carFromDatabase = carRepository.findById(car.getId()).orElse(null);
             if (carFromDatabase != null) {
-                carFromDatabase.setMaker(makerRepository.findByName(car.getMaker().getName()));
-                carFromDatabase.setModel(modelRepository.findByName(car.getModel().getName()));
-                carFromDatabase.setPrice(car.getPrice());
-                carFromDatabase.setYearOfProduction(car.getYearOfProduction());
-                carFromDatabase.setEngineType(car.getEngineType());
-                carFromDatabase.setTransmission(car.getTransmission());
+                this.fillCarFields(carFromDatabase, car);
                 carRepository.save(carFromDatabase);
             }
         }
+    }
+
+    private List<Car> filterCars(
+            List<Car> cars, String model, Integer priceFrom, Integer priceTo,
+            Integer yearFrom, Integer yearTo, List<String> transmission, List<String> engineType
+    ) {
+        Range price = new Range(priceFrom, priceTo);
+        Range year = new Range(yearFrom, yearTo);
+        this.validateRange(price);
+        this.validateRange(year);
+        return this.filterCarsByModelIfExists(
+                this.filterCarsByPrice(
+                        this.filterCarsByYear(
+                                this.filterCarsByTransmissionIfExists(
+                                        this.filterCarsByEngineTypeIfExists(
+                                                cars, engineType
+                                        ), transmission
+                                ), year
+                        ), price
+                ), model
+        );
+    }
+
+    private List<Car> filterCarsByModelIfExists(List<Car> cars, String model) {
+        if (model != null && !model.equals("")) {
+            cars = cars.stream().filter(car -> car.getModel().getName().equals(model)).collect(Collectors.toList());
+        }
+        return cars;
+    }
+
+    private void validateRange(Range range) {
+        if (range.from == null || range.from < 0) {
+            range.from = 0;
+        }
+        if (range.to == null || range.to < 0) {
+            range.to = 0;
+        }
+        if (range.from > range.to) {
+            int tmp = range.from;
+            range.from = range.to;
+            range.to = tmp;
+        }
+    }
+
+    private List<Car> filterCarsByPrice(List<Car> cars, Range price) {
+        if (price.from != 0) {
+            cars = cars.stream().filter(
+                    car -> car.getPrice() >= price.from
+            ).collect(Collectors.toList());
+        }
+        if (price.to != 0) {
+            cars = cars.stream().filter(
+                    car -> car.getPrice() <= price.to
+            ).collect(Collectors.toList());
+        }
+        return cars;
+    }
+
+    private List<Car> filterCarsByYear(List<Car> cars, Range year) {
+        if (year.from != 0) {
+            cars = cars.stream().filter(
+                    car -> car.getYearOfProduction() >= year.from
+            ).collect(Collectors.toList());
+        }
+        if (year.to != 0) {
+            cars = cars.stream().filter(
+                    car -> car.getYearOfProduction() <= year.to
+            ).collect(Collectors.toList());
+        }
+        return cars;
+    }
+
+    private List<Car> filterCarsByTransmissionIfExists(List<Car> cars, List<String> transmission) {
+        if (transmission != null && transmission.size() != 0) {
+            cars = cars.stream().filter(
+                    car -> transmission.contains(car.getTransmission().name())
+            ).collect(Collectors.toList());
+        }
+        return cars;
+    }
+
+    private List<Car> filterCarsByEngineTypeIfExists(List<Car> cars, List<String> engineType) {
+        if (engineType != null && engineType.size() != 0) {
+            cars = cars.stream().filter(
+                    car -> engineType.contains(car.getEngineType().name())
+            ).collect(Collectors.toList());
+        }
+        return cars;
+    }
+
+    private void uploadFileIfExists(Car car, MultipartFile file) throws IOException {
+        if (file != null) {
+            String filename = file.getOriginalFilename();
+            if (filename != null && !filename.isEmpty()) {
+                setFile(car, file);
+            }
+        }
+    }
+
+    private void addCarForUser(Car car, User user) {
+        Set<Car> userCars = user.getAddedCars();
+        if (userCars == null) {
+            userCars = new HashSet<>();
+        }
+        userCars.add(car);
+    }
+
+    private void saveCarAndUser(Car car, User user) {
+        user = userRepository.save(user);
+        car.setUser(user);
+        carRepository.save(car);
+    }
+
+    private boolean thereIsNoCarWithFields(Maker maker, Model model, int yearOfProduction, String engineType, String transmission) {
+        return carRepository.findByMakerAndModelAndYearOfProductionAndEngineTypeAndTransmission(
+                maker, model, yearOfProduction,
+                EngineType.valueOf(engineType),
+                Transmission.valueOf(transmission)
+        ) == null;
+    }
+
+    //todo lombok builder
+    private Car createNewCarWithFields(
+            Maker maker, Model model, int price, int yearOfProduction,
+            String transmission, String engineType
+    ) {
+        Car car = new Car();
+        car.setMaker(maker);
+        car.setModel(model);
+        car.setPrice(price);
+        car.setYearOfProduction(yearOfProduction);
+        car.setTransmission(Transmission.valueOf(transmission));
+        car.setEngineType(EngineType.valueOf(engineType));
+        return car;
+    }
+
+    private boolean userHasCar(User user, Car car) {
+        return user != null && car != null && user.getAddedCars().contains(car);
+    }
+
+    private void deleteFileIfExists(String filename) {
+        File file = new File(uploadPath + "/" + filename);
+        if (file.exists()) {
+            file.delete();
+        }
+    }
+
+    private void removeCarWithIdFromUserCars(User user, Long id) {
+        Set<Car> usersCars = user.getAddedCars();
+        usersCars = usersCars.stream().filter(c -> !c.getId().equals(id)).collect(Collectors.toSet());
+        user.setAddedCars(usersCars);
     }
 
     private void setFile(Car car, MultipartFile file) throws IOException {
@@ -207,5 +273,25 @@ public class CarCRUD implements CarService {
         String uniqueFilename = UUID.randomUUID().toString() + "." + file.getOriginalFilename();
         file.transferTo(new File(uploadPath + "/" + uniqueFilename));
         car.setFilename(uniqueFilename);
+    }
+
+    //todo lombok builder
+    private void fillCarFields(Car carFromDatabase, Car car) {
+        carFromDatabase.setMaker(makerRepository.findByName(car.getMaker().getName()));
+        carFromDatabase.setModel(modelRepository.findByName(car.getModel().getName()));
+        carFromDatabase.setPrice(car.getPrice());
+        carFromDatabase.setYearOfProduction(car.getYearOfProduction());
+        carFromDatabase.setEngineType(car.getEngineType());
+        carFromDatabase.setTransmission(car.getTransmission());
+    }
+
+    private static final class Range {
+        private Integer from;
+        private Integer to;
+
+        public Range(Integer from, Integer to) {
+            this.from = from;
+            this.to = to;
+        }
     }
 }

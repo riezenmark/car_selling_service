@@ -108,10 +108,10 @@
                         engineType = 'GASOLINE'
                         break
                     case 1:
-                        engineType = 'DIESEL'
+                        engineType = 'HYBRID'
                         break
                     case 2:
-                        engineType = 'HYBRID'
+                        engineType = 'DIESEL'
                         break
                     case 3:
                         engineType = 'ELECTRO'
@@ -146,7 +146,7 @@
                 this.years.push(i)
             }
             this.makers.forEach(maker => {
-                if (maker.id === this.car.maker) {
+                if (maker.id === this.car.maker.id) {
                     this.markText = this.makerNames[this.makerNames.indexOf(maker.name)]
                 }
             })

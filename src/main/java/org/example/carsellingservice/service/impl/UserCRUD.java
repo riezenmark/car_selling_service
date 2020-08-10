@@ -17,11 +17,13 @@ public class UserCRUD implements UserService {
 
     @Override
     public Iterable<UserDao> getWithoutCars(String q) {
+        Iterable<UserDao> users;
         if (q == null || q.equals("")) {
-            return userRepository.getAllWithoutCars();
+            users = userRepository.getAllWithoutCars();
         } else {
-            return userRepository.getWithoutCarsByName(q.toUpperCase());
+            users = userRepository.getWithoutCarsByName(q.toUpperCase());
         }
+        return users;
     }
 
     @Override
