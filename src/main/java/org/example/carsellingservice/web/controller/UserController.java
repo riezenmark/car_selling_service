@@ -6,8 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-//todo добавить (проверить) запросы извне (csrf?)
-//todo передача неполного json-а (json view)
+@SuppressWarnings("ALL")
 @RestController
 public class UserController {
 

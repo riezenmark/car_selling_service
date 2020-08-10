@@ -233,7 +233,6 @@ public class CarCRUD implements CarService {
         ) == null;
     }
 
-    //todo lombok builder
     private Car createNewCarWithFields(
             Maker maker, Model model, int price, int yearOfProduction,
             String transmission, String engineType
@@ -275,7 +274,6 @@ public class CarCRUD implements CarService {
         car.setFilename(uniqueFilename);
     }
 
-    //todo lombok builder
     private void fillCarFields(Car carFromDatabase, Car car) {
         carFromDatabase.setMaker(makerRepository.findByName(car.getMaker().getName()));
         carFromDatabase.setModel(modelRepository.findByName(car.getModel().getName()));
