@@ -13,7 +13,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -48,8 +51,7 @@ public class CarCRUD implements CarService {
     @Override
     public Iterable<Car> findCars(
             String manufacturer, String model, Integer priceFrom, Integer priceTo,
-            Integer yearFrom, Integer yearTo, List<String> transmission, List<String> engineType
-    ) {
+            Integer yearFrom, Integer yearTo, List<String> transmission, List<String> engineType) {
         List<Car> cars;
         if (manufacturer != null && !manufacturer.equals("")) {
             cars = StreamSupport.stream(
@@ -71,12 +73,10 @@ public class CarCRUD implements CarService {
     ) throws IOException {
         Maker maker = makerRepository.findByName(makerName);
         Model model = modelRepository.findByName(modelName);
-        if (this.thereIsNoCarWithFields(maker, model, yearOfProduction, engineType, transmission)) {
-            Car car = this.createNewCarWithFields(maker, model, price, yearOfProduction, transmission, engineType);
-            this.uploadFileIfExists(car, file);
-            this.addCarForUser(car, user);
-            this.saveCarAndUser(car, user);
-        }
+        Car car = this.createNewCarWithFields(maker, model, price, yearOfProduction, transmission, engineType);
+        this.uploadFileIfExists(car, file);
+        this.addCarForUser(car, user);
+        this.saveCarAndUser(car, user);
     }
 
     @Override
@@ -223,14 +223,6 @@ public class CarCRUD implements CarService {
         user = userRepository.save(user);
         car.setUser(user);
         carRepository.save(car);
-    }
-
-    private boolean thereIsNoCarWithFields(Maker maker, Model model, int yearOfProduction, String engineType, String transmission) {
-        return carRepository.findByMakerAndModelAndYearOfProductionAndEngineTypeAndTransmission(
-                maker, model, yearOfProduction,
-                EngineType.valueOf(engineType),
-                Transmission.valueOf(transmission)
-        ) == null;
     }
 
     private Car createNewCarWithFields(

@@ -140,6 +140,9 @@
                     this.car = c
                 }
             })
+            if (this.car === null) {
+                this.$router.push('/')
+            }
             this.makers.forEach(maker => this.makerNames.push(maker.name))
             const year = new Date().getFullYear()
             for (let i = 1960; i <= year; i++) {

@@ -125,14 +125,7 @@
                 formData.append("file", this.files[0])
 
                 this.$resource('/cars').save(formData)
-
-                this.markText = ''
-                this.price = 0
-                this.year = 1960
-                this.files = []
-                this.engineType = 0
-                this.transmission = 0
-                this.enableDisableModel()
+                this.$router.push('/')
             }
         },
         created() {
