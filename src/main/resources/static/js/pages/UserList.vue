@@ -20,7 +20,6 @@
                 <th class="text-left">Gender</th>
                 <th class="text-left">Locale</th>
                 <th class="text-left">Last Visit</th>
-                <th class="text-left">Picture</th>
                 <th class="text-left">Actions</th>
             </tr>
             </thead>
@@ -36,7 +35,7 @@
 </template>
 
 <script>
-    import UserRow from 'components/users/UserRow.vue'
+    import UserRow from 'static/js/components/users/UserRow.vue'
 
     export default {
         components: {

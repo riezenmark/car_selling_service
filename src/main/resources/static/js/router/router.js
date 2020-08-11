@@ -1,11 +1,11 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import UserList from 'pages/UserList.vue'
-import Admin from 'pages/Admin.vue'
-import Models from 'pages/Models.vue'
-import CarAdding from 'pages/CarAdding.vue'
-import Cars from 'pages/Cars.vue'
-import CarUpdating from 'pages/CarUpdating.vue'
+import UserList from 'static/js/pages/UserList.vue'
+import Admin from 'static/js/pages/Admin.vue'
+import Models from 'static/js/pages/Models.vue'
+import CarAdding from 'static/js/pages/CarAdding.vue'
+import Cars from 'static/js/pages/Cars.vue'
+import CarUpdating from 'static/js/pages/CarUpdating.vue'
 
 Vue.use(VueRouter)
 
