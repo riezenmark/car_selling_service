@@ -148,7 +148,7 @@ public class CarCRUD implements CarService {
      * @param user - пользователь, добавивший машину.
      */
     @Override
-    public void deleteCarWithId(Long id, User user) {
+    public void deleteCarWithId(Integer id, User user) {
         user = userRepository.findById(user.getId()).orElse(null);
         Car car = carRepository.findById(id).orElse(null);
         if (this.userHasCar(user, car)) {
@@ -407,7 +407,7 @@ public class CarCRUD implements CarService {
      * @param user - пользователь.
      * @param id - id машины.
      */
-    private void removeCarWithIdFromUserCars(User user, Long id) {
+    private void removeCarWithIdFromUserCars(User user, Integer id) {
         Set<Car> usersCars = user.getAddedCars();
         usersCars = usersCars.stream().filter(c -> !c.getId().equals(id)).collect(Collectors.toSet());
         user.setAddedCars(usersCars);

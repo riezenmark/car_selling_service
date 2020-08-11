@@ -53,3 +53,5 @@ values (1, 'CL', 1),
        (52, 'C30', 18),
        (53, 'S40', 18),
        (54, 'V70', 18);
+
+alter sequence models_id_seq restart with 55;

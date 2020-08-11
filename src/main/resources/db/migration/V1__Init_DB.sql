@@ -1,27 +1,24 @@
 create table cars (
-    id int8,
+    id serial primary key,
     engine_type varchar(63),
     filename varchar(255),
     price int4 not null,
     transmission varchar(63),
     year_of_production int4 not null,
     maker_id int4 not null,
-    model_id int8 not null,
-    user_id varchar(255),
-    primary key (id)
+    model_id int4 not null,
+    user_id varchar(255)
 );
 
 create table makers (
-    id int4,
-    name varchar(63) unique not null,
-    primary key (id)
+    id serial primary key,
+    name varchar(63) unique not null
 );
 
 create table models (
-    id int8,
+    id serial primary key,
     name varchar(63) not null,
-    maker_id int4 not null,
-    primary key (id)
+    maker_id int4 not null
 );
 
 create table users (

@@ -17,3 +17,5 @@ values (1, 'Acura'),
        (16, 'Toyota'),
        (17, 'Volkswagen'),
        (18, 'Volvo');
+
+alter sequence makers_id_seq restart with 19;

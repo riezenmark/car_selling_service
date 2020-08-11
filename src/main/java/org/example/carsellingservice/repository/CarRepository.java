@@ -7,7 +7,7 @@ import org.springframework.data.repository.CrudRepository;
 /**
  * Таблица машин.
  */
-public interface CarRepository extends CrudRepository<Car, Long> {
+public interface CarRepository extends CrudRepository<Car, Integer> {
 
     /**
      * Находит все машины данной марки.

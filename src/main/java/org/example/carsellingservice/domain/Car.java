@@ -24,7 +24,7 @@ public class Car implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonView(Views.Id.class)
-    private Long id;
+    private Integer id;
 
     /**
      * Марка машины.

@@ -109,7 +109,7 @@ public class CarController {
      * @param user - пользователь, добавивший машину.
      */
     @DeleteMapping
-    public void deleteCarWithId(@RequestParam Long id, @AuthenticationPrincipal User user) {
+    public void deleteCarWithId(@RequestParam Integer id, @AuthenticationPrincipal User user) {
         carService.deleteCarWithId(id, user);
     }
 }

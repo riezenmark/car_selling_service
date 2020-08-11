@@ -70,7 +70,7 @@ public interface CarService {
      * @param id - id машины.
      * @param user - пользователь, добавивший машину.
      */
-    void deleteCarWithId(Long id, User user);
+    void deleteCarWithId(Integer id, User user);
 
     /**
      * Обновляет поля машины, добавленной пользователем.

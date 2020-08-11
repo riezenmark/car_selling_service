@@ -30,7 +30,7 @@ public class Maker implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonView(Views.Id.class)
-    private int id;
+    private Integer id;
 
     /**
      * Название.
