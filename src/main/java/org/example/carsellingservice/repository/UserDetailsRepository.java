@@ -6,7 +6,15 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
+/**
+ * Таблица данных пользователей.
+ */
 public interface UserDetailsRepository extends CrudRepository<User, String> {
+
+    /**
+     * Возвращает всех пользователей без ссылок на добавленные ими машины.
+     * @return Возвращенные пользователи.
+     */
     @Query(
             "SELECT new org.example.carsellingservice.dao.UserDao("
                     + "u.id, u.name, u.userpic, u.email, u.gender, u.locale, u.lastVisit"
@@ -14,6 +22,11 @@ public interface UserDetailsRepository extends CrudRepository<User, String> {
     )
     Iterable<UserDao> getAllWithoutCars();
 
+    /**
+     * Находит пользователей с соответствующими запросу именем или почтой без учёта регистра.
+     * @param q - запрос для поиска.
+     * @return Возвращенные пользователи.
+     */
     @Query(
             "SELECT new org.example.carsellingservice.dao.UserDao("
                     + "u.id, u.name, u.userpic, u.email, u.gender, u.locale, u.lastVisit) "

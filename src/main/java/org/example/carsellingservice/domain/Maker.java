@@ -11,6 +11,9 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Set;
 
+/**
+ * Марка машины.
+ */
 @Entity
 @Table(name = "makers")
 @JsonIdentityInfo(
@@ -20,12 +23,24 @@ import java.util.Set;
 @Getter
 @Setter
 public class Maker implements Serializable {
+
+    /**
+     * Иденификатор.
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonView(Views.Id.class)
     private int id;
+
+    /**
+     * Название.
+     */
     @JsonView(Views.Name.class)
     private String name;
+
+    /**
+     * Модели данной марки.
+     */
     @OneToMany(mappedBy = "maker", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     private Set<Model> models;
 }

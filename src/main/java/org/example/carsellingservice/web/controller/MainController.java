@@ -13,11 +13,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.HashMap;
 
+/**
+ * Контроллер для главной страницы приложения.
+ */
 @Controller
 @RequestMapping("/")
 public class MainController {
 
+    /**
+     * Сервис для работы с марками машин.
+     */
     private final CarMakerService makerService;
+    /**
+     * Сервис для работы с машинами.
+     */
     private final CarService carService;
 
     @Autowired
@@ -26,7 +35,14 @@ public class MainController {
         this.carService = carService;
     }
 
-    //todo убрать девмод
+    /**
+     * Передаёт список моделей, максимальную цену машины (для сокращения количества запросов к базе)
+     * и данные пользователя, если он авторизован (для изменения вида и набора разрешённых действий
+     * в зависимости от роли пользователя), для хранения на клиенте.
+     * @param model - модель данных для передачи на клиент.
+     * @param user - пользователь, авторизованный в данный момент.
+     * @return Главная страница приложения.
+     */
     @GetMapping
     public String main(Model model, @AuthenticationPrincipal User user) {
         HashMap<Object, Object> frontendData = new HashMap<>();
@@ -38,7 +54,6 @@ public class MainController {
         frontendData.put("makers", makerService.getAllWithoutModels());
         frontendData.put("maximumPrice", carService.getMaximumCarPrice());
         model.addAttribute("frontendData", frontendData);
-        model.addAttribute("isDevMode", true);
         return "index";
     }
 }

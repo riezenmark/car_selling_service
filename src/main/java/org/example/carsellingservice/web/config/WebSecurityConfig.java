@@ -13,6 +13,9 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 
 import java.time.LocalDateTime;
 
+/**
+ * Настройка авторизации и аутентификации.
+ */
 @Configuration
 @EnableWebSecurity
 @EnableOAuth2Sso
@@ -35,6 +38,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable();
     }
 
+    /**
+     * Извлекает данные пользователя при авторизации, устанавливает время последнего визита
+     * и сохраняет нового/обновляет существующего пользователя в репозитории.
+     * @param repository - хранилище пользователей.
+     * @return Результат сохранения/обновления.
+     */
     @Bean
     public PrincipalExtractor principalExtractor(UserDetailsRepository repository) {
         return map -> {

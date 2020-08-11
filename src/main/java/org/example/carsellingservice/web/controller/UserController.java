@@ -6,10 +6,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * Контроллер для работы с пользователями.
+ */
 @SuppressWarnings("ALL")
 @RestController
 public class UserController {
 
+    /**
+     * Сервис для работы с пользователями.
+     */
     private final UserService service;
 
     @Autowired
@@ -17,6 +23,11 @@ public class UserController {
         this.service = service;
     }
 
+    /**
+     * Находит пользователей с соответствующими запросу именем или почтой без учёта регистра.
+     * @param q - запрос для поиска.
+     * @return Возвращенные пользователи.
+     */
     @PreAuthorize("principal.email == 'riezenmark@gmail.com'")
     @RequestMapping("/admin/users")
     @GetMapping
@@ -24,6 +35,10 @@ public class UserController {
         return service.getWithoutCars(q);
     }
 
+    /**
+     * Удаляет пользователя по id.
+     * @param id - id пользователя.
+     */
     @PreAuthorize("principal.email == 'riezenmark@gmail.com'")
     @RequestMapping("/admin/users/{id}")
     @DeleteMapping

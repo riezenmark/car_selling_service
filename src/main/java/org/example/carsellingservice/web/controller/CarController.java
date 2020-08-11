@@ -11,10 +11,16 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * Контроллер для машин.
+ */
 @RestController
 @RequestMapping("cars")
 public class CarController {
 
+    /**
+     * Сервис для работы с машинами.
+     */
     private final CarService carService;
 
     @Autowired
@@ -22,6 +28,18 @@ public class CarController {
         this.carService = carService;
     }
 
+    /**
+     * Поиск машин по набору параметров.
+     * @param manufacturer - название марки машины.
+     * @param model - название модели машины.
+     * @param priceFrom - нижний ценовой диапазон.
+     * @param priceTo - верхний ценовой диапазон.
+     * @param yearFrom - нижний диапазон года производсва.
+     * @param yearTo - верхний диапазон года производсва.
+     * @param transmission - тип коробки передач.
+     * @param engineType - тип двигателя.
+     * @return Найденные машны.
+     */
     @GetMapping
     public Iterable<Car> searchForCars(
             @RequestParam(required = false) String manufacturer,
@@ -38,11 +56,27 @@ public class CarController {
         );
     }
 
+    /**
+     * Возвращает машины пользователя с заданным id.
+     * @param id - id пользователя.
+     * @return Возвращенные машины.
+     */
     @GetMapping("{id}")
     public Iterable<Car> getCarsOfUser(@PathVariable String id) {
         return carService.getCarsOfUserWithId(id);
     }
 
+    /**
+     * Добавляет новую машину.
+     * @param user - пользователь, добавивший машину.
+     * @param modelName - названи модели машины.
+     * @param makerName - название марки машины.
+     * @param price - цены машины.
+     * @param yearOfProduction - год производства машины.
+     * @param transmission - тип коробки передач.
+     * @param engineType - тип двигателя.
+     * @param file - фото машины.
+     */
     @PostMapping
     public void addNewCar(
             @AuthenticationPrincipal User user,
@@ -59,11 +93,21 @@ public class CarController {
         );
     }
 
+    /**
+     * Обновляет поля машины, добавленной пользователем.
+     * @param car - машина.
+     * @param user - пользователь, добавивший машину.
+     */
     @PutMapping
     public void updateCar(@RequestBody Car car, @AuthenticationPrincipal User user) {
         carService.updateCar(car, user);
     }
 
+    /**
+     * Удаляет машину, добавленную пользователем.
+     * @param id - id машины.
+     * @param user - пользователь, добавивший машину.
+     */
     @DeleteMapping
     public void deleteCarWithId(@RequestParam Long id, @AuthenticationPrincipal User user) {
         carService.deleteCarWithId(id, user);

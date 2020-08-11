@@ -84,9 +84,12 @@
             </v-container>
         </v-main>
         <v-footer app color="indigo" class="white--text" inset>
-            <span>CarSelling Company</span>
-            <v-spacer></v-spacer>
+            <span class="mr-2">CarSelling Company</span>
             <span>&copy; {{ new Date().getFullYear() }}</span>
+            <v-spacer></v-spacer>
+            <v-btn class="white--text" target="_blank" icon href="https://github.com/riezenmark/car_selling_service">
+                <v-icon large>mdi-github</v-icon>
+            </v-btn>
         </v-footer>
     </v-app>
 </template>

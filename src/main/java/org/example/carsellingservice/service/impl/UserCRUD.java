@@ -6,8 +6,15 @@ import org.example.carsellingservice.service.api.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * Реализация сервиса для работы с пользователями.
+ */
 @Service
 public class UserCRUD implements UserService {
+
+    /**
+     * Хранилище данных пользователей.
+     */
     private final UserDetailsRepository userRepository;
 
     @Autowired
@@ -15,6 +22,11 @@ public class UserCRUD implements UserService {
         this.userRepository = userRepository;
     }
 
+    /**
+     * Находит пользователей с соответствующими запросу именем или почтой без учёта регистра.
+     * @param q - запрос для поиска.
+     * @return Возвращенные пользователи.
+     */
     @Override
     public Iterable<UserDao> getWithoutCars(String q) {
         Iterable<UserDao> users;
@@ -26,6 +38,10 @@ public class UserCRUD implements UserService {
         return users;
     }
 
+    /**
+     * Удаляет пользователя по id.
+     * @param id - id пользователя.
+     */
     @Override
     public void deleteById(String id) {
         userRepository.deleteById(id);
