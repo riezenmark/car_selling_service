@@ -14,7 +14,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -35,5 +36,42 @@ public class UserCRUDTest {
         ).collect(Collectors.toList());
 
         assertFalse(users.isEmpty());
+    }
+
+    @Test
+    public void whenSearchForUsersByEmptyQueryThenResultIsNotEmpty() {
+        String query = "";
+
+        List<UserDao> users = StreamSupport.stream(
+                service.getWithoutCars(query).spliterator(), false
+        ).collect(Collectors.toList());
+
+        assertFalse(users.isEmpty());
+    }
+
+    @Test
+    public void whenSearchForUsersByNullQueryThenResultIsNotEmpty() {
+        List<UserDao> users = StreamSupport.stream(
+                service.getWithoutCars(null).spliterator(), false
+        ).collect(Collectors.toList());
+
+        assertFalse(users.isEmpty());
+    }
+
+    @Test
+    public void whenDeleteAllUsersByIdThenThereIsNoMoreUsers() {
+        List<UserDao> users = StreamSupport.stream(
+                service.getWithoutCars(null).spliterator(), false
+        ).collect(Collectors.toList());
+
+        for (UserDao user : users) {
+            service.deleteById(user.getId());
+        }
+
+        users = StreamSupport.stream(
+                service.getWithoutCars(null).spliterator(), false
+        ).collect(Collectors.toList());
+
+        assertTrue(users.isEmpty());
     }
 }
