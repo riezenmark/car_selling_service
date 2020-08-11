@@ -73,3 +73,5 @@ jrebel.lic
 build
 .gradle
 *.pid
+
+/src/main/resources/static/js/main.js

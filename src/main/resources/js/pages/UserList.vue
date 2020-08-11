@@ -35,7 +35,7 @@
 </template>
 
 <script>
-    import UserRow from 'static/js/components/users/UserRow.vue'
+    import UserRow from 'components/users/UserRow.vue'
 
     export default {
         components: {

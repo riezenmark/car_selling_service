@@ -2,9 +2,9 @@ import Vue from 'vue'
 import '@babel/polyfill'
 import router from './router/router'
 import VueResource from 'vue-resource'
-import App from 'static/js/pages/App.vue'
-import store from "static/js/store/store";
-import vuetify from 'static/js/plugin/vuetify'
+import App from 'pages/App.vue'
+import store from "store/store";
+import vuetify from 'plugin/vuetify'
 import 'vuetify/dist/vuetify.min.css'
 
 Vue.use(VueResource)

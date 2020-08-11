@@ -154,11 +154,12 @@
                 }
             },
             mainPage() {
-                if (this.$route !== '/') {
+                if (this.$route.path !== '/') {
                     this.$router.push('/')
                 }
             },
             searchForCars() {
+                this.mainPage()
                 const transmission = []
                 if (this.MECHANIC === true)
                     transmission.push('MECHANIC')
