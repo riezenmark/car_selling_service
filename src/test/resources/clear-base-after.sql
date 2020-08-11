@@ -1,0 +1,4 @@
+DELETE FROM cars;
+DELETE FROM models;
+DELETE FROM makers;
+DELETE FROM users;
