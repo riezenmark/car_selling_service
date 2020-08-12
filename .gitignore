@@ -75,3 +75,4 @@ build
 *.pid
 
 /src/main/resources/static/js/main.js
+/gradle/wrapper/gradle-wrapper.jar
