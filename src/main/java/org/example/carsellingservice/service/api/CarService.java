@@ -9,21 +9,23 @@ import java.util.List;
 
 public interface CarService {
 
-    Iterable<Car> getAll();
+    //todo pageable?
+    List<Car> getAll();
 
+    //todo refactor
     void addCarForUser(
             User user, String modelName, String makerName, int price,
             int yearOfProduction, String transmission, String engineType, MultipartFile file
     ) throws IOException;
 
-    Iterable<Car> findCars(
+    List<Car> findCars(
             String manufacturer, String model, Integer priceFrom, Integer priceTo, Integer yearFrom,
             Integer yearTo, List<String> transmission, List<String> engineType
     );
 
     Integer getMaximumCarPrice();
 
-    Iterable<Car> getCarsOfUserWithId(String id);
+    List<Car> getCarsOfUserWithId(String id);
 
     void deleteCarWithId(Long id, User user);
 

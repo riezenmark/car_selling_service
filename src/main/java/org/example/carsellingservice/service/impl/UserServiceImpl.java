@@ -1,23 +1,23 @@
 package org.example.carsellingservice.service.impl;
 
-import org.example.carsellingservice.dao.UserDao;
+import lombok.RequiredArgsConstructor;
+import org.example.carsellingservice.domain.User;
 import org.example.carsellingservice.repository.UserDetailsRepository;
 import org.example.carsellingservice.service.api.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
-public class UserCRUD implements UserService {
+@RequiredArgsConstructor
+public class UserServiceImpl implements UserService {
+
     private final UserDetailsRepository userRepository;
 
-    @Autowired
-    public UserCRUD(UserDetailsRepository userRepository) {
-        this.userRepository = userRepository;
-    }
-
     @Override
-    public Iterable<UserDao> getWithoutCars(String q) {
-        Iterable<UserDao> users;
+    public List<User> getWithoutCars(String q) {
+        List<User> users;
+        //todo использовать опшионалы
         if (q == null || q.equals("")) {
             users = userRepository.getAllWithoutCars();
         } else {

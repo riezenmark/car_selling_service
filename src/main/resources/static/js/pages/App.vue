@@ -208,7 +208,7 @@
             source: String,
         },
         created() {
-            this.makers.forEach(maker => this.makerNames.push(maker.name))
+            this.makers.forEach(carMaker => this.makerNames.push(carMaker.name))
             const year = new Date().getFullYear()
             for (let i = 1960; i <= year; i++) {
                 this.years.push(i)

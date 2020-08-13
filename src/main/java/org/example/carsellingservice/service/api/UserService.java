@@ -1,9 +1,11 @@
 package org.example.carsellingservice.service.api;
 
-import org.example.carsellingservice.dao.UserDao;
+import org.example.carsellingservice.domain.User;
+
+import java.util.List;
 
 public interface UserService {
-    Iterable<UserDao> getWithoutCars(String q);
+    List<User> getWithoutCars(String q);
 
     void deleteById(String id);
 }

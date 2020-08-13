@@ -1,5 +1,5 @@
 package org.example.carsellingservice.domain;
 
-public enum Transmission {
+public enum TransmissionType {
     AUTOMATIC, MECHANIC
 }

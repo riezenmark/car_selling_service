@@ -1,11 +1,14 @@
 package org.example.carsellingservice.service.api;
 
-import org.example.carsellingservice.domain.Model;
+import org.example.carsellingservice.domain.CarModel;
 
+import java.util.List;
+
+//todo rename
 public interface CarModelService {
-    Iterable<Model> getAllModelsOfMaker(String makerName);
+    List<CarModel> getAllModelsOfMaker(String makerName);
 
-    void updateOne(Model previousModel, Model model);
+    void updateOne(CarModel previousModel, CarModel model);
 
-    void deleteOne(Model model);
+    void deleteOne(CarModel model);
 }

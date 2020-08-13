@@ -1,27 +1,25 @@
-package org.example.carsellingservice.web.controller;
+package org.example.carsellingservice.controller;
 
-import org.example.carsellingservice.dao.UserDao;
+import lombok.RequiredArgsConstructor;
+import org.example.carsellingservice.domain.User;
 import org.example.carsellingservice.service.api.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 //todo добавить (проверить) запросы извне (csrf?)
 //todo передача неполного json-а (json view)
 @RestController
+@RequiredArgsConstructor
 public class UserController {
 
     private final UserService service;
 
-    @Autowired
-    public UserController(UserService service) {
-        this.service = service;
-    }
-
     @PreAuthorize("principal.email == 'riezenmark@gmail.com'")
     @RequestMapping("/admin/users")
     @GetMapping
-    public Iterable<UserDao> list(@RequestParam(required = false) String q) {
+    public List<User> list(@RequestParam(required = false) String q) {
         return service.getWithoutCars(q);
     }
 

@@ -1,5 +1,6 @@
-package org.example.carsellingservice.web.controller;
+package org.example.carsellingservice.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.example.carsellingservice.domain.Car;
 import org.example.carsellingservice.domain.User;
 import org.example.carsellingservice.service.api.CarMakerService;
@@ -15,16 +16,12 @@ import java.util.HashMap;
 
 @Controller
 @RequestMapping("/")
+@RequiredArgsConstructor
 public class MainController {
 
+    //todo ?
     private final CarMakerService makerService;
     private final CarService carService;
-
-    @Autowired
-    public MainController(CarMakerService makerService, CarService carService) {
-        this.makerService = makerService;
-        this.carService = carService;
-    }
 
     //todo убрать девмод
     @GetMapping
@@ -38,7 +35,6 @@ public class MainController {
         frontendData.put("makers", makerService.getAllWithoutModels());
         frontendData.put("maximumPrice", carService.getMaximumCarPrice());
         model.addAttribute("frontendData", frontendData);
-        model.addAttribute("isDevMode", true);
         return "index";
     }
 }

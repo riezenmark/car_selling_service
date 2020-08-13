@@ -1,4 +1,4 @@
-package org.example.carsellingservice.web.config;
+package org.example.carsellingservice.config;
 
 import org.example.carsellingservice.domain.User;
 import org.example.carsellingservice.repository.UserDetailsRepository;

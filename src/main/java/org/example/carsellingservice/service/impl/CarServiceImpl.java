@@ -1,52 +1,45 @@
 package org.example.carsellingservice.service.impl;
 
+import lombok.RequiredArgsConstructor;
 import org.example.carsellingservice.domain.*;
 import org.example.carsellingservice.repository.CarMakerRepository;
 import org.example.carsellingservice.repository.CarModelRepository;
 import org.example.carsellingservice.repository.CarRepository;
 import org.example.carsellingservice.repository.UserDetailsRepository;
 import org.example.carsellingservice.service.api.CarService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-@SuppressWarnings("ResultOfMethodCallIgnored")
 @Service
-public class CarCRUD implements CarService {
+@RequiredArgsConstructor
+public class CarServiceImpl implements CarService {
 
-    @Value("${upload.path}")
+    @Value("${upload.path}:/home/riezenmark/uploads")
     private String uploadPath;
 
+    //todo Автовайрим сервисы, передаём дто (mapStruct)
     private final CarRepository carRepository;
     private final CarMakerRepository makerRepository;
     private final CarModelRepository modelRepository;
     private final UserDetailsRepository userRepository;
 
-    @Autowired
-    public CarCRUD(
-            CarRepository carRepository, CarMakerRepository makerRepository,
-            CarModelRepository modelRepository, UserDetailsRepository userRepository
-    ) {
-        this.carRepository = carRepository;
-        this.makerRepository = makerRepository;
-        this.modelRepository = modelRepository;
-        this.userRepository = userRepository;
-    }
-
     @Override
-    public Iterable<Car> getAll() {
+    public List<Car> getAll() {
         return carRepository.findAll();
     }
 
     @Override
-    public Iterable<Car> findCars(
+    public List<Car> findCars(
             String manufacturer, String model, Integer priceFrom, Integer priceTo,
             Integer yearFrom, Integer yearTo, List<String> transmission, List<String> engineType
     ) {
@@ -69,10 +62,10 @@ public class CarCRUD implements CarService {
             User user, String modelName, String makerName, int price, int yearOfProduction,
             String transmission, String engineType, MultipartFile file
     ) throws IOException {
-        Maker maker = makerRepository.findByName(makerName);
-        Model model = modelRepository.findByName(modelName);
-        if (this.thereIsNoCarWithFields(maker, model, yearOfProduction, engineType, transmission)) {
-            Car car = this.createNewCarWithFields(maker, model, price, yearOfProduction, transmission, engineType);
+        CarMaker carMaker = makerRepository.findByName(makerName);
+        CarModel model = modelRepository.findByName(modelName);
+        if (this.thereIsNoCarWithFields(carMaker, model, yearOfProduction, engineType, transmission)) {
+            Car car = this.createNewCarWithFields(carMaker, model, price, yearOfProduction, transmission, engineType);
             this.uploadFileIfExists(car, file);
             this.addCarForUser(car, user);
             this.saveCarAndUser(car, user);
@@ -85,7 +78,7 @@ public class CarCRUD implements CarService {
     }
 
     @Override
-    public Iterable<Car> getCarsOfUserWithId(String id) {
+    public List<Car> getCarsOfUserWithId(String id) {
         User user = userRepository.findById(id).orElse(null);
         return carRepository.findByUser(user);
     }
@@ -114,6 +107,7 @@ public class CarCRUD implements CarService {
         }
     }
 
+    //todo hibernate criteria
     private List<Car> filterCars(
             List<Car> cars, String model, Integer priceFrom, Integer priceTo,
             Integer yearFrom, Integer yearTo, List<String> transmission, List<String> engineType
@@ -225,25 +219,25 @@ public class CarCRUD implements CarService {
         carRepository.save(car);
     }
 
-    private boolean thereIsNoCarWithFields(Maker maker, Model model, int yearOfProduction, String engineType, String transmission) {
+    private boolean thereIsNoCarWithFields(CarMaker carMaker, CarModel model, int yearOfProduction, String engineType, String transmission) {
         return carRepository.findByMakerAndModelAndYearOfProductionAndEngineTypeAndTransmission(
-                maker, model, yearOfProduction,
+                carMaker, model, yearOfProduction,
                 EngineType.valueOf(engineType),
-                Transmission.valueOf(transmission)
+                TransmissionType.valueOf(transmission)
         ) == null;
     }
 
     //todo lombok builder
     private Car createNewCarWithFields(
-            Maker maker, Model model, int price, int yearOfProduction,
+            CarMaker carMaker, CarModel model, int price, int yearOfProduction,
             String transmission, String engineType
     ) {
         Car car = new Car();
-        car.setMaker(maker);
+        car.setMaker(carMaker);
         car.setModel(model);
         car.setPrice(price);
         car.setYearOfProduction(yearOfProduction);
-        car.setTransmission(Transmission.valueOf(transmission));
+        car.setTransmission(TransmissionType.valueOf(transmission));
         car.setEngineType(EngineType.valueOf(engineType));
         return car;
     }
@@ -285,6 +279,7 @@ public class CarCRUD implements CarService {
         carFromDatabase.setTransmission(car.getTransmission());
     }
 
+    //todo Возможно заменить
     private static final class Range {
         private Integer from;
         private Integer to;

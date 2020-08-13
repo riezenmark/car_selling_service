@@ -1,7 +1,9 @@
 package org.example.carsellingservice.service.api;
 
-import org.example.carsellingservice.dao.MakerDao;
+import org.example.carsellingservice.domain.CarMaker;
+
+import java.util.List;
 
 public interface CarMakerService {
-    Iterable<MakerDao> getAllWithoutModels();
+    List<CarMaker> getAllWithoutModels();
 }

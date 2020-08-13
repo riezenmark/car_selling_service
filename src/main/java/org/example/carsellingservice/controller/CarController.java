@@ -1,9 +1,9 @@
-package org.example.carsellingservice.web.controller;
+package org.example.carsellingservice.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.example.carsellingservice.domain.Car;
 import org.example.carsellingservice.domain.User;
 import org.example.carsellingservice.service.api.CarService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -12,18 +12,14 @@ import java.io.IOException;
 import java.util.List;
 
 @RestController
-@RequestMapping("cars")
+@RequestMapping("/cars")
+@RequiredArgsConstructor
 public class CarController {
 
     private final CarService carService;
 
-    @Autowired
-    public CarController(CarService carService) {
-        this.carService = carService;
-    }
-
     @GetMapping
-    public Iterable<Car> searchForCars(
+    public List<Car> searchForCars(
             @RequestParam(required = false) String manufacturer,
             @RequestParam(required = false) String model,
             @RequestParam(required = false) Integer priceFrom,
@@ -38,11 +34,12 @@ public class CarController {
         );
     }
 
-    @GetMapping("{id}")
-    public Iterable<Car> getCarsOfUser(@PathVariable String id) {
+    @GetMapping("/{id}")
+    public List<Car> getCarsOfUser(@PathVariable String id) {
         return carService.getCarsOfUserWithId(id);
     }
 
+    //todo формдата
     @PostMapping
     public void addNewCar(
             @AuthenticationPrincipal User user,
@@ -60,7 +57,7 @@ public class CarController {
     }
 
     @PutMapping
-    public void updateCar(@RequestBody Car car, @AuthenticationPrincipal User user) {
+    public void update(@RequestBody Car car, @AuthenticationPrincipal User user) {
         carService.updateCar(car, user);
     }
 

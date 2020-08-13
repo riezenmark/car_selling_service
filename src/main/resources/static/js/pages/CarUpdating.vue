@@ -119,7 +119,7 @@
                 }
                 const car = {
                     id: parseInt(this.$route.params.id),
-                    maker: {
+                    carMaker: {
                         name: this.markText
                     },
                     model: {
@@ -140,14 +140,14 @@
                     this.car = c
                 }
             })
-            this.makers.forEach(maker => this.makerNames.push(maker.name))
+            this.makers.forEach(carMaker => this.makerNames.push(carMaker.name))
             const year = new Date().getFullYear()
             for (let i = 1960; i <= year; i++) {
                 this.years.push(i)
             }
-            this.makers.forEach(maker => {
-                if (maker.id === this.car.maker.id) {
-                    this.markText = this.makerNames[this.makerNames.indexOf(maker.name)]
+            this.makers.forEach(carMaker => {
+                if (carMaker.id === this.car.carMaker.id) {
+                    this.markText = this.makerNames[this.makerNames.indexOf(carMaker.name)]
                 }
             })
             this.getModels()

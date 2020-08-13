@@ -1,23 +1,21 @@
 package org.example.carsellingservice.service.impl;
 
-import org.example.carsellingservice.dao.MakerDao;
+import lombok.RequiredArgsConstructor;
+import org.example.carsellingservice.domain.CarMaker;
 import org.example.carsellingservice.repository.CarMakerRepository;
 import org.example.carsellingservice.service.api.CarMakerService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
-public class CarMakerCRUD implements CarMakerService {
+@RequiredArgsConstructor
+public class CarMakerServiceImpl implements CarMakerService {
 
     private final CarMakerRepository makerRepository;
 
-    @Autowired
-    public CarMakerCRUD(CarMakerRepository makerRepository) {
-        this.makerRepository = makerRepository;
-    }
-
     @Override
-    public Iterable<MakerDao> getAllWithoutModels() {
+    public List<CarMaker> getAllWithoutModels() {
         return makerRepository.getAllWithoutModels();
     }
 }
