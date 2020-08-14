@@ -2,14 +2,15 @@ package org.example.carsellingservice.service.api;
 
 import org.example.carsellingservice.domain.User;
 
+import java.util.List;
+
 public interface UserService {
-    Iterable<User> getAll();
+    //todo page
+    //todo dto?
+    List<User> getUsers(String searchQuery);
 
-    User getById(Long id);
+    void deleteById(String id);
 
-    User add(User user);
-
-    User updateById(Long id, User user);
-
-    void deleteById(Long id);
+    //todo dto?
+    User getById(String id);
 }
