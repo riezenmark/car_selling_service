@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -15,7 +16,6 @@ public class CarMaker {
     private Integer id;
     @Column(unique = true)
     private String name;
-
-    //@OneToMany(mappedBy = "maker", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
-    //private Set<Model> models;
+    @OneToMany(mappedBy = "maker", orphanRemoval = true)
+    private Set<CarModel> models;
 }

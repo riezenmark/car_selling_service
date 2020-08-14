@@ -2,9 +2,12 @@ package org.example.carsellingservice.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.example.carsellingservice.domain.CarMaker;
+import org.example.carsellingservice.dto.CarMakerDto;
 import org.example.carsellingservice.repository.CarMakerRepository;
 import org.example.carsellingservice.service.api.CarMakerService;
+import org.example.carsellingservice.service.util.CarMakerMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -13,35 +16,38 @@ import java.util.List;
 public class CarMakerServiceImpl implements CarMakerService {
 
     private final CarMakerRepository makerRepository;
+    private final CarMakerMapper mapper;
 
-    //todo transactional
     //todo page
     //todo criteria
     @Override
-    public List<CarMaker> getMakers(String searchQuery) {
+    @Transactional(readOnly = true)
+    public List<CarMakerDto> getMakers(String searchQuery) {
         if (searchQuery != null && !searchQuery.equals("")) {
-            return makerRepository.findAllByNameLike(searchQuery.toUpperCase());
+            return mapper.map(makerRepository.findAllByNameLike(searchQuery.toUpperCase()));
         } else {
-            return makerRepository.findAll();
+            return mapper.map(makerRepository.findAll());
         }
     }
 
     @Override
+    @Transactional(readOnly = true)
     public CarMaker getById(Integer id) {
-        return makerRepository.findById(id).orElse(null);
+        return makerRepository.findByIdWithModels(id).orElse(null);
     }
 
-    //todo optional?
-    //todo criteria?
-    //todo dto?
     @Override
-    public CarMaker add(CarMaker maker) {
-        return makerRepository
-                .findByName(maker.getName())
-                .orElseGet(() -> {
-                    maker.setId(null);
-                    return makerRepository.save(maker);
-                });
+    @Transactional
+    public CarMakerDto add(CarMaker maker) {
+        return mapper.map(
+                makerRepository
+                        .findByName(maker.getName())
+                        .orElseGet(() -> {
+                            maker.setId(null);
+                            maker.setModels(null);
+                            return makerRepository.save(maker);
+                        })
+        );
     }
 
     //todo dto?

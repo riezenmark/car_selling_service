@@ -2,6 +2,7 @@ package org.example.carsellingservice.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.example.carsellingservice.domain.CarMaker;
+import org.example.carsellingservice.dto.CarMakerDto;
 import org.example.carsellingservice.service.api.CarMakerService;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,10 +17,9 @@ public class CarMakerController {
 
     //todo page
     @GetMapping
-    public List<CarMaker> list(@RequestParam(name = "q", required = false) String name) {
+    public List<CarMakerDto> list(@RequestParam(name = "q", required = false) String name) {
         return makerService.getMakers(name);
     }
-
 
     @GetMapping("{id}")
     public CarMaker get(@PathVariable Integer id) {
@@ -27,10 +27,11 @@ public class CarMakerController {
     }
 
     @PostMapping
-    public CarMaker save(@RequestBody CarMaker maker) {
+    public CarMakerDto save(@RequestBody CarMaker maker) {
         return makerService.add(maker);
     }
 
+    //todo возвращать результат
     @PutMapping("{id}")
     public void update(@PathVariable Integer id, @RequestBody CarMaker maker) {
         makerService.update(id, maker);
