@@ -19,7 +19,7 @@ public class UserServiceImpl implements UserService {
     //todo criteria
     @Override
     public List<User> getUsers(String searchQuery) {
-        if (searchQuery != null && !searchQuery.equals("")) {
+        if (searchQuery != null && !searchQuery.isEmpty()) {
             return userRepository.findByNameOrEmail(searchQuery.toUpperCase());
         } else {
             return userRepository.findAll();
@@ -28,13 +28,13 @@ public class UserServiceImpl implements UserService {
 
     //todo transactional
     @Override
-    public void deleteById(String id) {
-        userRepository.deleteById(id);
+    public User getById(String id) {
+        return userRepository.findById(id).orElse(null);
     }
 
     //todo transactional
     @Override
-    public User getById(String id) {
-        return userRepository.findById(id).orElse(null);
+    public void deleteById(String id) {
+        userRepository.findById(id).ifPresent(userRepository::delete);
     }
 }

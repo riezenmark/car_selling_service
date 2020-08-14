@@ -16,11 +16,13 @@ public class UserController {
 
     //todo role restrict
     //todo page
+    //todo dto?
     @GetMapping
     public List<User> list(@RequestParam(name = "q", required = false) String searchQuery) {
         return userService.getUsers(searchQuery);
     }
 
+    //todo dto?
     @GetMapping("{id}")
     public User get(@PathVariable String id) {
         return userService.getById(id);
@@ -28,6 +30,7 @@ public class UserController {
 
     //todo role restrict
     //todo page
+    //todo dto?
     @DeleteMapping("{id}")
     public void delete(@PathVariable("id") String id) {
         userService.deleteById(id);
