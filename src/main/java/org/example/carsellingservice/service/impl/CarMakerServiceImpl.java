@@ -9,7 +9,10 @@ import org.example.carsellingservice.service.util.CarMakerMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -18,16 +21,16 @@ public class CarMakerServiceImpl implements CarMakerService {
     private final CarMakerRepository makerRepository;
     private final CarMakerMapper mapper;
 
-    //todo page
-    //todo criteria
     @Override
     @Transactional(readOnly = true)
     public List<CarMakerDto> getMakers(String searchQuery) {
-        if (searchQuery != null && !searchQuery.equals("")) {
-            return mapper.map(makerRepository.findAllByNameLike(searchQuery.toUpperCase()));
-        } else {
-            return mapper.map(makerRepository.findAll());
-        }
+        List<CarMakerDto> result = new LinkedList<>();
+        Optional.ofNullable(searchQuery).ifPresentOrElse(
+                (makerName) -> result.addAll(mapper.map(makerRepository.findAllByNameLike(makerName.toUpperCase()))),
+                () -> result.addAll(mapper.map(makerRepository.findAll()))
+        );
+        result.sort(Comparator.comparing(CarMakerDto::getName));
+        return result;
     }
 
     @Override
@@ -51,7 +54,7 @@ public class CarMakerServiceImpl implements CarMakerService {
     }
 
     //todo dto?
-    //todo обработать exception при существующем имени
+    //todo обработать exception при существующем имени/criteria?
     @Override
     public void update(Integer id, CarMaker maker) {
         makerRepository
@@ -63,6 +66,7 @@ public class CarMakerServiceImpl implements CarMakerService {
     }
 
     @Override
+    @Transactional
     public void delete(Integer id) {
         makerRepository.findById(id).ifPresent(makerRepository::delete);
     }

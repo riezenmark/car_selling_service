@@ -12,10 +12,10 @@ import java.util.Set;
 @Table(name = "car_makers")
 public class CarMaker {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @Column(unique = true)
     private String name;
-    @OneToMany(mappedBy = "maker", orphanRemoval = true)
+    @OneToMany(mappedBy = "maker")
     private Set<CarModel> models;
 }

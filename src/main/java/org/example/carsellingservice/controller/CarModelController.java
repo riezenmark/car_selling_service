@@ -2,7 +2,6 @@ package org.example.carsellingservice.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.example.carsellingservice.domain.CarModel;
-import org.example.carsellingservice.dto.CarModelDto;
 import org.example.carsellingservice.service.api.CarModelService;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,7 +16,7 @@ public class CarModelController {
 
     //todo page
     @GetMapping
-    public List<CarModelDto> list(
+    public List<CarModel> list(
             @RequestParam(name = "q", required = false) String name,
             @RequestParam(name = "maker", required = false) Integer makerId
     ) {
