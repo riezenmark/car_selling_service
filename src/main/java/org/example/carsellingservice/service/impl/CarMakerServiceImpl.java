@@ -9,8 +9,6 @@ import org.example.carsellingservice.service.util.CarMakerMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Comparator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,13 +22,11 @@ public class CarMakerServiceImpl implements CarMakerService {
     @Override
     @Transactional(readOnly = true)
     public List<CarMakerDto> getMakers(String searchQuery) {
-        List<CarMakerDto> result = new LinkedList<>();
-        Optional.ofNullable(searchQuery).ifPresentOrElse(
-                (makerName) -> result.addAll(mapper.map(makerRepository.findAllByNameLike(makerName.toUpperCase()))),
-                () -> result.addAll(mapper.map(makerRepository.findAll()))
+        return mapper.map(
+                Optional.ofNullable(searchQuery)
+                        .map(makerName -> makerRepository.findAllByNameLike(makerName.toUpperCase()))
+                        .orElseGet(makerRepository::findAll)
         );
-        result.sort(Comparator.comparing(CarMakerDto::getName));
-        return result;
     }
 
     @Override
@@ -43,31 +39,33 @@ public class CarMakerServiceImpl implements CarMakerService {
     @Transactional
     public CarMakerDto add(CarMaker maker) {
         return mapper.map(
-                makerRepository
-                        .findByName(maker.getName())
-                        .orElseGet(() -> {
+                Optional.ofNullable(maker.getName())
+                        .map(name -> makerRepository.findByName(name).orElseGet(() -> {
                             maker.setId(null);
                             maker.setModels(null);
                             return makerRepository.save(maker);
                         })
+                        ).orElse(null)
         );
     }
 
-    //todo dto?
-    //todo обработать exception при существующем имени/criteria?
     @Override
-    public void update(Integer id, CarMaker maker) {
-        makerRepository
-                .findById(id)
-                .ifPresent(makerFromRepository -> {
-                    makerFromRepository.setName(maker.getName());
-                    makerRepository.save(makerFromRepository);
-                });
+    @Transactional
+    public CarMakerDto update(Integer id, CarMaker maker) {
+        CarMaker makerFromDatabase = makerRepository.findByName(maker.getName()).orElse(null);
+        if (makerFromDatabase == null) {
+            makerFromDatabase = makerRepository.findById(id).orElse(null);
+            if (makerFromDatabase != null) {
+                makerFromDatabase.setName(maker.getName());
+                makerRepository.save(makerFromDatabase);
+            }
+        }
+        return mapper.map(makerFromDatabase);
     }
 
     @Override
     @Transactional
     public void delete(Integer id) {
-        makerRepository.findById(id).ifPresent(makerRepository::delete);
+        makerRepository.findById(id).ifPresent(makerRepository::cascadeDelete);
     }
 }

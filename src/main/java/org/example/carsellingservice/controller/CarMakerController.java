@@ -15,7 +15,6 @@ public class CarMakerController {
 
     private final CarMakerService makerService;
 
-    //todo page
     @GetMapping
     public List<CarMakerDto> list(@RequestParam(name = "q", required = false) String name) {
         return makerService.getMakers(name);
@@ -31,10 +30,9 @@ public class CarMakerController {
         return makerService.add(maker);
     }
 
-    //todo возвращать результат
     @PutMapping("{id}")
-    public void update(@PathVariable Integer id, @RequestBody CarMaker maker) {
-        makerService.update(id, maker);
+    public CarMakerDto update(@PathVariable Integer id, @RequestBody CarMaker maker) {
+        return makerService.update(id, maker);
     }
 
     @DeleteMapping("{id}")

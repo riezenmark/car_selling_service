@@ -57,6 +57,7 @@ public class PersistenceJPAConfig {
     PlatformTransactionManager transactionManager() {
         JpaTransactionManager transactionManager = new JpaTransactionManager();
         transactionManager.setEntityManagerFactory(entityManagerFactory().getObject());
+        transactionManager.setDataSource(dataSource());
 
         return transactionManager;
     }
