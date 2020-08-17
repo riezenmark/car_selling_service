@@ -5,16 +5,13 @@ import org.example.carsellingservice.domain.CarModel;
 import java.util.List;
 
 public interface CarModelService {
+    List<CarModel> getModels(final String searchQuery, final Integer makerId);
 
-    List<CarModel> getModels(String searchQuery, Integer makerId);
+    CarModel getById(final Long id);
 
-    CarModel getById(Long id);
+    CarModel add(final CarModel model);
 
-    //todo dto?
-    CarModel add(CarModel model);
+    CarModel update(final Long id, final CarModel model);
 
-    //todo dto?
-    void update(Long id, CarModel model);
-
-    void delete(Long id);
+    void delete(final Long id);
 }

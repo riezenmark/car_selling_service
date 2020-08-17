@@ -3,57 +3,81 @@ package org.example.carsellingservice.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.example.carsellingservice.domain.CarModel;
 import org.example.carsellingservice.repository.CarModelRepository;
+import org.example.carsellingservice.service.api.CarMakerService;
 import org.example.carsellingservice.service.api.CarModelService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
+
+import static org.example.carsellingservice.repository.specification.CarModelSpecification.*;
 
 @Service
 @RequiredArgsConstructor
 public class CarModelServiceImpl implements CarModelService {
 
     private final CarModelRepository modelRepository;
+    private final CarMakerService makerService;
 
-    //todo transactional
-    //todo page
-    //todo criteria
     @Override
-    public List<CarModel> getModels(String searchQuery, Integer makerId) {
-        if (searchQuery != null && !searchQuery.isEmpty()) {
-            return modelRepository.findAllByNameLike(searchQuery.toUpperCase());
+    @Transactional(readOnly = true)
+    public List<CarModel> getModels(final String searchQuery, final Integer makerId) {
+        List<CarModel> modelsFromDatabase;
+        if (makerId == null) {
+            modelsFromDatabase = Optional.ofNullable(searchQuery)
+                    .map(name -> modelRepository.findAll(carModelsWithNameLike(name)))
+                    .orElseGet(modelRepository::findAll);
         } else {
-            return modelRepository.findAll();
+            modelsFromDatabase = Optional.ofNullable(searchQuery)
+                    .map(name -> modelRepository.findAll(carModelsOfMakerWithIdAndNameLike(makerId, name)))
+                    .orElseGet(() -> modelRepository.findAll(carModelsOfCarMakerWithId(makerId)));
         }
+        return modelsFromDatabase;
     }
 
     @Override
-    public CarModel getById(Long id) {
+    @Transactional(readOnly = true)
+    public CarModel getById(final Long id) {
         return modelRepository.findById(id).orElse(null);
     }
 
     @Override
-    public CarModel add(CarModel model) {
-        return modelRepository
-                .findByNameAndMaker_id(model.getName(), model.getMaker().getId())
-                .orElseGet(() -> {
-                    model.setId(null);
-                    return modelRepository.save(model);
-                });
+    @Transactional
+    public CarModel add(final CarModel model) {
+        CarModel modelFromRepository = null;
+        if (modelFieldsAreValid(model) && makerService.existsById(model.getMaker().getId())) {
+            modelFromRepository = modelRepository
+                    .findByNameAndMaker_id(model.getName(), model.getMaker().getId())
+                    .orElseGet(() -> {
+                        model.setId(null);
+                        return modelRepository.save(model);
+                    });
+        }
+        return modelFromRepository;
     }
 
-    //todo вернуть результат
     @Override
-    public void update(Long id, CarModel model) {
-        modelRepository
-                .findById(id)
-                .ifPresent(modelFromRepository -> {
+    @Transactional
+    public CarModel update(final Long id, final CarModel model) {
+        return modelRepository.findById(id)
+                .filter(modelFromRepository -> !makerService.carMakerOfModelAlreadyHasModelWithName(modelFromRepository, model.getName()))
+                .map(modelFromRepository -> {
                     modelFromRepository.setName(model.getName());
-                    modelRepository.save(model);
-                });
+                    return modelRepository.save(modelFromRepository);
+                })
+                .orElse(null);
     }
 
     @Override
-    public void delete(Long id) {
+    @Transactional
+    public void delete(final Long id) {
         modelRepository.findById(id).ifPresent(modelRepository::delete);
+    }
+
+    private boolean modelFieldsAreValid(final CarModel model) {
+        return model.getName() != null
+                && model.getMaker() != null
+                && model.getMaker().getId() != null;
     }
 }

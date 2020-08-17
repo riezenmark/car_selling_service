@@ -15,11 +15,11 @@ public interface CarMakerRepository extends JpaRepository<CarMaker, Integer>, Ca
     List<CarMaker> findAll();
 
     @Query("SELECT m from CarMaker m where upper(m.name) like %:searchQuery% order by m.name")
-    List<CarMaker> findAllByNameLike(String searchQuery);
+    List<CarMaker> findAllByNameLike(final String searchQuery);
 
     @Query("SELECT m from CarMaker m where m.id = :id")
     @EntityGraph(attributePaths = {"models"})
-    Optional<CarMaker> findByIdWithModels(Integer id);
+    Optional<CarMaker> findByIdWithModels(final Integer id);
 
-    Optional<CarMaker> findByName(String name);
+    Optional<CarMaker> findByName(final String name);
 }

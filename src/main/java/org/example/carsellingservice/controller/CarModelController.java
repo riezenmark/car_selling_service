@@ -14,33 +14,31 @@ public class CarModelController {
 
     private final CarModelService modelService;
 
-    //todo page
     @GetMapping
     public List<CarModel> list(
-            @RequestParam(name = "q", required = false) String name,
-            @RequestParam(name = "maker", required = false) Integer makerId
+            @RequestParam(name = "q", required = false) final String name,
+            @RequestParam(name = "maker", required = false) final Integer makerId
     ) {
         return modelService.getModels(name, makerId);
     }
 
     @GetMapping("{id}")
-    public CarModel get(@PathVariable Long id) {
+    public CarModel get(@PathVariable final Long id) {
         return modelService.getById(id);
     }
 
     @PostMapping
-    public CarModel save(@RequestBody CarModel model) {
+    public CarModel save(@RequestBody final CarModel model) {
         return modelService.add(model);
     }
 
-    //todo возвращать результат
     @PutMapping("{id}")
-    public void update(@PathVariable Long id, @RequestBody CarModel model) {
-        modelService.update(id, model);
+    public CarModel update(@PathVariable final Long id, @RequestBody CarModel model) {
+        return modelService.update(id, model);
     }
 
     @DeleteMapping("{id}")
-    public void delete(@PathVariable Long id) {
+    public void delete(@PathVariable final Long id) {
         modelService.delete(id);
     }
 }

@@ -1,19 +1,23 @@
 package org.example.carsellingservice.service.api;
 
 import org.example.carsellingservice.domain.CarMaker;
+import org.example.carsellingservice.domain.CarModel;
 import org.example.carsellingservice.dto.CarMakerDto;
 
 import java.util.List;
 
 public interface CarMakerService {
+    List<CarMakerDto> getMakers(final String searchQuery);
 
-    List<CarMakerDto> getMakers(String searchQuery);
+    CarMaker getById(final Integer id);
 
-    CarMaker getById(Integer id);
+    CarMakerDto add(final CarMaker maker);
 
-    CarMakerDto add(CarMaker maker);
+    CarMakerDto update(final Integer id, final CarMaker maker);
 
-    CarMakerDto update(Integer id, CarMaker maker);
+    void delete(final Integer id);
 
-    void delete(Integer id);
+    boolean existsById(final Integer id);
+
+    boolean carMakerOfModelAlreadyHasModelWithName(final CarModel model, final String name);
 }

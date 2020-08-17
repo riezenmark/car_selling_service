@@ -2,6 +2,7 @@ package org.example.carsellingservice.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.example.carsellingservice.domain.CarMaker;
+import org.example.carsellingservice.domain.CarModel;
 import org.example.carsellingservice.dto.CarMakerDto;
 import org.example.carsellingservice.repository.CarMakerRepository;
 import org.example.carsellingservice.service.api.CarMakerService;
@@ -21,7 +22,7 @@ public class CarMakerServiceImpl implements CarMakerService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<CarMakerDto> getMakers(String searchQuery) {
+    public List<CarMakerDto> getMakers(final String searchQuery) {
         return mapper.map(
                 Optional.ofNullable(searchQuery)
                         .map(makerName -> makerRepository.findAllByNameLike(makerName.toUpperCase()))
@@ -31,41 +32,55 @@ public class CarMakerServiceImpl implements CarMakerService {
 
     @Override
     @Transactional(readOnly = true)
-    public CarMaker getById(Integer id) {
+    public CarMaker getById(final Integer id) {
         return makerRepository.findByIdWithModels(id).orElse(null);
     }
 
     @Override
     @Transactional
-    public CarMakerDto add(CarMaker maker) {
+    public CarMakerDto add(final CarMaker maker) {
         return mapper.map(
                 Optional.ofNullable(maker.getName())
                         .map(name -> makerRepository.findByName(name).orElseGet(() -> {
                             maker.setId(null);
                             maker.setModels(null);
                             return makerRepository.save(maker);
-                        })
-                        ).orElse(null)
+                        }))
+                        .orElse(null)
         );
     }
 
     @Override
     @Transactional
-    public CarMakerDto update(Integer id, CarMaker maker) {
-        CarMaker makerFromDatabase = makerRepository.findByName(maker.getName()).orElse(null);
-        if (makerFromDatabase == null) {
-            makerFromDatabase = makerRepository.findById(id).orElse(null);
-            if (makerFromDatabase != null) {
-                makerFromDatabase.setName(maker.getName());
-                makerRepository.save(makerFromDatabase);
+    public CarMakerDto update(final Integer id, final CarMaker maker) {
+        CarMaker makerFromRepository = makerRepository.findByName(maker.getName()).orElse(null);
+        if (makerFromRepository == null) {
+            makerFromRepository = makerRepository.findById(id).orElse(null);
+            if (makerFromRepository != null) {
+                makerFromRepository.setName(maker.getName());
+                makerRepository.save(makerFromRepository);
             }
         }
-        return mapper.map(makerFromDatabase);
+        return mapper.map(makerFromRepository);
     }
 
     @Override
     @Transactional
-    public void delete(Integer id) {
-        makerRepository.findById(id).ifPresent(makerRepository::cascadeDelete);
+    public void delete(final Integer id) {
+        makerRepository.findById(id).ifPresent(makerRepository::bulkDeleteCascade);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public boolean existsById(final Integer id) {
+        return makerRepository.existsById(id);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public boolean carMakerOfModelAlreadyHasModelWithName(final CarModel model, final String name) {
+        return Optional.ofNullable(name)
+                .map(s -> getById(model.getMaker().getId()).getModels().stream().anyMatch(m -> m.getName().equals(name)))
+                .orElse(true);
     }
 }
