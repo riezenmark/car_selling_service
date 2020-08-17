@@ -71,7 +71,7 @@ public class CarModelServiceImpl implements CarModelService {
 
     @Override
     @Transactional
-    public void delete(final Long id) {
+    public void deleteById(final Long id) {
         modelRepository.findById(id).ifPresent(modelRepository::delete);
     }
 

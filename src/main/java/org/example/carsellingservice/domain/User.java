@@ -5,6 +5,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Getter
@@ -20,8 +21,8 @@ public class User {
     private String locale;
     @Enumerated(EnumType.STRING)
     private Role role;
-    //@OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
-    //private Set<Car> addedCars;
+    @OneToMany(mappedBy = "user")
+    private List<Car> addedCars;
 
     //todo Object mapper
     //@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")

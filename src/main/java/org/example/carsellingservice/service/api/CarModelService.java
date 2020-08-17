@@ -13,5 +13,5 @@ public interface CarModelService {
 
     CarModel update(final Long id, final CarModel model);
 
-    void delete(final Long id);
+    void deleteById(final Long id);
 }

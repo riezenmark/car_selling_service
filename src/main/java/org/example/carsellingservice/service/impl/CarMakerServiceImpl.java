@@ -66,7 +66,7 @@ public class CarMakerServiceImpl implements CarMakerService {
 
     @Override
     @Transactional
-    public void delete(final Integer id) {
+    public void deleteById(final Integer id) {
         makerRepository.findById(id).ifPresent(makerRepository::bulkDeleteCascade);
     }
 

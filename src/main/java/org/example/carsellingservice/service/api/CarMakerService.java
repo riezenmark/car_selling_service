@@ -15,7 +15,7 @@ public interface CarMakerService {
 
     CarMakerDto update(final Integer id, final CarMaker maker);
 
-    void delete(final Integer id);
+    void deleteById(final Integer id);
 
     boolean existsById(final Integer id);
 
