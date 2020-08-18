@@ -65,7 +65,7 @@
             <v-btn icon class="white--text" @click="carAddingPage(profile)">
                 <v-icon>mdi-plus</v-icon>
             </v-btn>
-            <v-btn v-if="!profile" text class="white--text" href="/login">Вход и регистрация</v-btn>
+            <v-btn v-if="!profile" text class="white--text" href="/signup">Вход и регистрация</v-btn>
             <v-btn v-if="profile" outlined class="white--text mx-2" @click="usersCars">{{ profile.name }}</v-btn>
             <v-btn v-if="profile" icon href="/logout">
                 <v-icon>mdi-exit-to-app</v-icon>
@@ -150,7 +150,7 @@
                 if (profile) {
                     this.$router.push('/add')
                 } else {
-                    window.location.replace('/login')
+                    window.location.replace('/signup')
                 }
             },
             mainPage() {

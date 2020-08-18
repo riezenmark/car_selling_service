@@ -1,54 +1,49 @@
 package org.example.carsellingservice.config;
 
-import org.example.carsellingservice.domain.User;
-import org.example.carsellingservice.repository.UserRepository;
-import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth2Sso;
-import org.springframework.boot.autoconfigure.security.oauth2.resource.PrincipalExtractor;
-import org.springframework.context.annotation.Bean;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 
-import java.time.LocalDateTime;
+import javax.sql.DataSource;
 
 @Configuration
 @EnableWebSecurity
-@EnableOAuth2Sso
 @EnableGlobalMethodSecurity(prePostEnabled = true)
+@RequiredArgsConstructor
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+
+    private final DataSource dataSource;
 
     //todo static
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http
-                .antMatcher("/**")
+        http.antMatcher("/**")
                 .authorizeRequests()
-                .antMatchers("/**", "/api/**/**", "/static/js/**", "/error**").permitAll()
-                .anyRequest().authenticated()
+                    .antMatchers("/**", "/api/**/**", "/static/js/**", "/error**", "/signup").permitAll()
+                    .anyRequest().authenticated()
                 .and()
-                .logout().logoutSuccessUrl("/").permitAll()
+                    .formLogin()
+                    .permitAll()
                 .and()
-                .csrf().disable();
+                    .logout()
+                    .logoutSuccessUrl("/")
+                    .permitAll()
+                .and()
+                    .csrf()
+                    .disable();
     }
 
-    @Bean
-    public PrincipalExtractor principalExtractor(UserRepository repository) {
-        return map -> {
-            String id = (String) map.get("sub");
-            User user = repository.findById(id).orElseGet(() ->
-                    User.builder()
-                            .id(id)
-                            .name((String) map.get("name"))
-                            .email((String) map.get("email"))
-                            .gender((String) map.get("gender"))
-                            .locale((String) map.get("locale"))
-                            .userpic((String) map.get("picture"))
-                            .build()
-            );
-            user.setLastVisit(LocalDateTime.now());
-            return repository.save(user);
-        };
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.jdbcAuthentication()
+                .dataSource(dataSource)
+                .passwordEncoder(NoOpPasswordEncoder.getInstance())
+                .usersByUsernameQuery("SELECT username, password, active from users where username=?")
+                .authoritiesByUsernameQuery("SELECT u.username, ur.roles from users u inner join user_roles ur on u.id = ur.user_id where u.username=?");
     }
 }

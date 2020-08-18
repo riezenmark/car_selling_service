@@ -24,6 +24,8 @@
     "css-loader": "^3.2.0",
     "deepmerge": "^4.0.0",
     "fibers": "^4.0.1",
+    "file-loader": "^6.0.0",
+    "material-design-icons-iconfont": "^5.0.1",
     "sass": "^1.22.10",
     "sass-loader": "^7.3.1",
     "style-loader": "^1.0.0",

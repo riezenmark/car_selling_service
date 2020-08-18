@@ -13,4 +13,8 @@ public interface UserService {
 
     //todo dto?
     User getById(String id);
+
+    boolean userWithNameExists(User user);
+
+    void addNew(User user);
 }

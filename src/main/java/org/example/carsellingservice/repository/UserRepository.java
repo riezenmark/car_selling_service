@@ -9,6 +9,8 @@ import java.util.List;
 public interface UserRepository extends JpaRepository<User, String> {
 
     //todo page
-    @Query("SELECT u from User u where upper(u.name) like %:searchQuery% or upper(u.email) like %:searchQuery%")
-    List<User> findByNameOrEmail(String searchQuery);
+    @Query("SELECT u from User u where upper(u.username) like %:searchQuery%")
+    List<User> findByNameLike(String searchQuery);
+
+    boolean existsByUsername(String username);
 }
