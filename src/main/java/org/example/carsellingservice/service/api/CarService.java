@@ -1,20 +1,23 @@
 package org.example.carsellingservice.service.api;
 
 import org.example.carsellingservice.domain.Car;
+import org.example.carsellingservice.domain.EngineType;
+import org.example.carsellingservice.domain.Transmission;
+import org.example.carsellingservice.dto.CarDto;
 
 import java.util.List;
 
 public interface CarService {
-    List<Car> getCars(Integer makerId, Long modelId, Integer priceFrom,
-                      Integer priceTo, Integer yearFrom, Integer yearTo,
-                      List<String> transmission, List<String> engineType);
+    List<CarDto> getCars(final Integer makerId, final Long modelId, final Integer priceFrom,
+                      final Integer priceTo, final Integer yearFrom, final Integer yearTo,
+                      final List<Transmission> transmission, final List<EngineType> engineType);
 
 
-    Car getById(Long id);
+    CarDto getById(final Long id);
 
-    Car add(Car car);
+    CarDto add(final Car car);
 
-    Car update(Long id, Car car);
+    CarDto update(final Long id, final Car car);
 
-    void deleteById(Long id);
+    void deleteById(final Long id);
 }

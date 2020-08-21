@@ -78,7 +78,7 @@ public class CarMakerServiceImpl implements CarMakerService {
 
     @Override
     @Transactional(readOnly = true)
-    public boolean carMakerOfModelAlreadyHasModelWithName(final CarModel model, final String name) {
+    public boolean carMakerOfModelHasModelWithName(final CarModel model, final String name) {
         return Optional.ofNullable(name)
                 .map(s -> getById(model.getMaker().getId()).getModels().stream().anyMatch(m -> m.getName().equals(name)))
                 .orElse(true);

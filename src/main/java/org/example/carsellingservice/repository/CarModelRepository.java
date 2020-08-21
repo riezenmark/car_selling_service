@@ -25,4 +25,6 @@ public interface CarModelRepository extends JpaRepository<CarModel, Long>, JpaSp
 
     @EntityGraph(attributePaths = {"id", "name"})
     Optional<CarModel> findByNameAndMaker_id(final String name, final Integer id);
+
+    boolean existsByIdAndMaker_id(Long id, Integer makerId);
 }

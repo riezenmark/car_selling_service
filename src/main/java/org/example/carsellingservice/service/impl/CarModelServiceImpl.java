@@ -61,7 +61,7 @@ public class CarModelServiceImpl implements CarModelService {
     @Transactional
     public CarModel update(final Long id, final CarModel model) {
         return modelRepository.findById(id)
-                .filter(modelFromRepository -> !makerService.carMakerOfModelAlreadyHasModelWithName(modelFromRepository, model.getName()))
+                .filter(modelFromRepository -> !makerService.carMakerOfModelHasModelWithName(modelFromRepository, model.getName()))
                 .map(modelFromRepository -> {
                     modelFromRepository.setName(model.getName());
                     return modelRepository.save(modelFromRepository);
@@ -72,7 +72,15 @@ public class CarModelServiceImpl implements CarModelService {
     @Override
     @Transactional
     public void deleteById(final Long id) {
-        modelRepository.findById(id).ifPresent(modelRepository::delete);
+        if (modelRepository.existsById(id)) {
+            modelRepository.deleteById(id);
+        }
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public boolean modelBelongsToMakerWithId(final CarModel model, final Integer makerId) {
+        return modelRepository.existsByIdAndMaker_id(model.getId(), makerId);
     }
 
     private boolean modelFieldsAreValid(final CarModel model) {

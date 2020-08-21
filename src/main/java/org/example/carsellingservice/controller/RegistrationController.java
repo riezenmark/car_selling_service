@@ -28,7 +28,7 @@ public class RegistrationController {
             model.put("message", "User with name " + user.getUsername() + " already exists");
         } else {
             userService.addNew(user);
-            page = "redirect:/index";
+            page = "redirect:/";
         }
         return page;
     }

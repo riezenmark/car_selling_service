@@ -19,5 +19,5 @@ public interface CarMakerService {
 
     boolean existsById(final Integer id);
 
-    boolean carMakerOfModelAlreadyHasModelWithName(final CarModel model, final String name);
+    boolean carMakerOfModelHasModelWithName(final CarModel model, final String name);
 }

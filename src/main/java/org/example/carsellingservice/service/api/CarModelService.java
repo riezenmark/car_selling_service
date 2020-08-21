@@ -14,4 +14,6 @@ public interface CarModelService {
     CarModel update(final Long id, final CarModel model);
 
     void deleteById(final Long id);
+
+    boolean modelBelongsToMakerWithId(final CarModel model, final Integer makerId);
 }

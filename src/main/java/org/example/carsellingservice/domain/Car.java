@@ -2,6 +2,8 @@ package org.example.carsellingservice.domain;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 
@@ -9,6 +11,11 @@ import javax.persistence.*;
 @Getter
 @Setter
 @Table(name = "cars")
+@NamedEntityGraph(name = "carWithMakerAndModel",
+    attributeNodes = {
+            @NamedAttributeNode("maker"),
+            @NamedAttributeNode("model")
+    })
 public class Car {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,6 +23,7 @@ public class Car {
     @ManyToOne
     private CarMaker maker;
     @ManyToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private CarModel model;
     private Integer price;
     @Column(name = "year_of_production")
@@ -25,7 +33,6 @@ public class Car {
     @Enumerated(EnumType.STRING)
     @Column(name = "engine_type")
     private EngineType engineType;
-    private String filename;
     @ManyToOne
     private User user;
 }
