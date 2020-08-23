@@ -17,10 +17,7 @@ public class CarMakerRepositoryImpl implements CarMakerRepositoryCustom {
     @Override
     public void bulkDeleteCascade(final CarMaker maker) {
         entityManager.find(CarMaker.class, maker.getId());
-        Query query = entityManager.createQuery("DELETE from Car where maker.id = ?1");
-        query.setParameter(1, maker.getId());
-        query.executeUpdate();
-        query = entityManager.createQuery("DELETE from CarModel where maker.id = ?1");
+        Query query = entityManager.createQuery("DELETE from CarModel where maker.id = ?1");
         query.setParameter(1, maker.getId());
         query.executeUpdate();
         entityManager.remove(maker);

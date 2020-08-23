@@ -22,13 +22,13 @@ public class RegistrationController {
     }
 
     @PostMapping
-    public String addUser(User user, Map<String, Object> model) {
+    public String addUser(final User user, final Map<String, Object> model) {
         String page = "signup";
         if (userService.userWithNameExists(user)) {
             model.put("message", "User with name " + user.getUsername() + " already exists");
         } else {
             userService.addNew(user);
-            page = "redirect:/";
+            page = "redirect:/login";
         }
         return page;
     }

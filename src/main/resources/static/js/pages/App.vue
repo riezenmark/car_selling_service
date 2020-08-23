@@ -66,13 +66,13 @@
         <v-icon>mdi-plus</v-icon>
       </v-btn>
       <v-btn v-if="!profile" text class="white--text" href="/signup">Вход и регистрация</v-btn>
-      <v-btn v-if="profile" outlined class="white--text mx-2" @click="usersCars">{{ profile.name }}</v-btn>
+      <v-btn v-if="profile" outlined class="white--text mx-2" @click="usersCars">{{ profile.username }}</v-btn>
       <v-btn v-if="profile" icon href="/logout">
         <v-icon>mdi-exit-to-app</v-icon>
       </v-btn>
       <v-btn
           outlined
-          v-if="profile && profile.email === 'riezenmark@gmail.com'"
+          v-if="profile && profile.authorities === 'riezenmark@gmail.com'"
           @click="adminPage"
           class="white--text ml-2"
       >ADMIN

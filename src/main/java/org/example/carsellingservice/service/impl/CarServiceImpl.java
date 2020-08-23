@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.carsellingservice.domain.Car;
 import org.example.carsellingservice.domain.EngineType;
 import org.example.carsellingservice.domain.Transmission;
+import org.example.carsellingservice.domain.User;
 import org.example.carsellingservice.dto.CarDto;
 import org.example.carsellingservice.repository.CarRepository;
 import org.example.carsellingservice.service.api.CarModelService;
@@ -50,7 +51,7 @@ public class CarServiceImpl implements CarService {
 
     @Override
     @Transactional
-    public CarDto add(final Car car) {
+    public CarDto add(final Car car, final User user) {
         Car carFromRepository = null;
         if (carIsValid(car)) {
             car.setId(null);
@@ -61,7 +62,7 @@ public class CarServiceImpl implements CarService {
 
     @Override
     @Transactional
-    public CarDto update(final Long id, final Car car) {
+    public CarDto update(final Long id, final Car car, final User user) {
         Car carFromRepository = carRepository.findByIdWithMakerAndModel(id).orElse(null);
         if (carFromRepository != null && carIsValid(car)) {
             car.setId(id);
@@ -72,7 +73,7 @@ public class CarServiceImpl implements CarService {
 
     @Override
     @Transactional
-    public void deleteById(final Long id) {
+    public void deleteById(final Long id, final User user) {
         if (carRepository.existsById(id)) {
             carRepository.deleteById(id);
         }

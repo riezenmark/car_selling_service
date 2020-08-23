@@ -18,7 +18,7 @@ public class MainController {
     private final CarMakerService makerService;
 
     @GetMapping
-    public String initClientData(Model model, @AuthenticationPrincipal User user) {
+    public String initClientData(final Model model, @AuthenticationPrincipal final User user) {
         HashMap<Object, Object> clientData = new HashMap<>();
         if (user != null) {
             clientData.put("profile", user);

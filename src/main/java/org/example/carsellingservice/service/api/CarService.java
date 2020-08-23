@@ -3,6 +3,7 @@ package org.example.carsellingservice.service.api;
 import org.example.carsellingservice.domain.Car;
 import org.example.carsellingservice.domain.EngineType;
 import org.example.carsellingservice.domain.Transmission;
+import org.example.carsellingservice.domain.User;
 import org.example.carsellingservice.dto.CarDto;
 
 import java.util.List;
@@ -15,9 +16,9 @@ public interface CarService {
 
     CarDto getById(final Long id);
 
-    CarDto add(final Car car);
+    CarDto add(final Car car, final User user);
 
-    CarDto update(final Long id, final Car car);
+    CarDto update(final Long id, final Car car, final User user);
 
-    void deleteById(final Long id);
+    void deleteById(final Long id, final User user);
 }

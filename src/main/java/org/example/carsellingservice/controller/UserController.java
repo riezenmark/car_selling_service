@@ -3,36 +3,36 @@ package org.example.carsellingservice.controller;
 import lombok.RequiredArgsConstructor;
 import org.example.carsellingservice.domain.User;
 import org.example.carsellingservice.service.api.UserService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/users")
+@PreAuthorize("hasAuthority('ADMIN')")
 @RequiredArgsConstructor
 public class UserController {
 
     private final UserService userService;
 
-    //todo role restrict
-    //todo page
-    //todo dto?
     @GetMapping
     public List<User> list(@RequestParam(name = "q", required = false) String searchQuery) {
         return userService.getUsers(searchQuery);
     }
 
-    //todo dto?
     @GetMapping("{id}")
-    public User get(@PathVariable String id) {
+    public User get(@PathVariable Long id) {
         return userService.getById(id);
     }
 
-    //todo role restrict
-    //todo page
-    //todo dto?
+    @PutMapping("{id}")
+    public User update(@PathVariable Long id, @RequestBody User user) {
+        return userService.update(id, user);
+    }
+
     @DeleteMapping("{id}")
-    public void delete(@PathVariable("id") String id) {
+    public void delete(@PathVariable("id") Long id) {
         userService.deleteById(id);
     }
 }

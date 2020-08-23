@@ -3,6 +3,7 @@ package org.example.carsellingservice.controller;
 import lombok.RequiredArgsConstructor;
 import org.example.carsellingservice.domain.CarModel;
 import org.example.carsellingservice.service.api.CarModelService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,16 +29,19 @@ public class CarModelController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('ADMIN')")
     public CarModel save(@RequestBody final CarModel model) {
         return modelService.add(model);
     }
 
     @PutMapping("{id}")
-    public CarModel update(@PathVariable final Long id, @RequestBody CarModel model) {
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public CarModel update(@PathVariable final Long id, @RequestBody final CarModel model) {
         return modelService.update(id, model);
     }
 
     @DeleteMapping("{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public void delete(@PathVariable final Long id) {
         modelService.deleteById(id);
     }

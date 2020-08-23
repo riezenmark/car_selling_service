@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.carsellingservice.domain.CarMaker;
 import org.example.carsellingservice.dto.CarMakerDto;
 import org.example.carsellingservice.service.api.CarMakerService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,16 +27,19 @@ public class CarMakerController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('ADMIN')")
     public CarMakerDto save(@RequestBody final CarMaker maker) {
         return makerService.add(maker);
     }
 
     @PutMapping("{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public CarMakerDto update(@PathVariable final Integer id, @RequestBody final CarMaker maker) {
         return makerService.update(id, maker);
     }
 
     @DeleteMapping("{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public void delete(@PathVariable final Integer id) {
         makerService.deleteById(id);
     }

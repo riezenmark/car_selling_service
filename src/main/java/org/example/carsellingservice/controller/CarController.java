@@ -4,8 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.example.carsellingservice.domain.Car;
 import org.example.carsellingservice.domain.EngineType;
 import org.example.carsellingservice.domain.Transmission;
+import org.example.carsellingservice.domain.User;
 import org.example.carsellingservice.dto.CarDto;
 import org.example.carsellingservice.service.api.CarService;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -39,17 +41,17 @@ public class CarController {
     }
 
     @PostMapping
-    public CarDto save(@RequestBody final Car car) {
-        return carService.add(car);
+    public CarDto save(@RequestBody final Car car, @AuthenticationPrincipal final User user) {
+        return carService.add(car, user);
     }
 
     @PutMapping("{id}")
-    public CarDto update(@PathVariable Long id, @RequestBody final Car car) {
-        return carService.update(id, car);
+    public CarDto update(@PathVariable final Long id, @RequestBody final Car car, @AuthenticationPrincipal final User user) {
+        return carService.update(id, car, user);
     }
 
     @DeleteMapping("{id}")
-    public void delete(@PathVariable Long id) {
-        carService.deleteById(id);
+    public void delete(@PathVariable final Long id, @AuthenticationPrincipal final User user) {
+        carService.deleteById(id, user);
     }
 }

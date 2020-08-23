@@ -34,5 +34,6 @@ public class Car {
     @Column(name = "engine_type")
     private EngineType engineType;
     @ManyToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
 }
