@@ -28,7 +28,7 @@ public class CarRepositoryImpl implements CarRepositoryCustom {
     ) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Car> query = criteriaBuilder.createQuery(Car.class);
-        EntityGraph entityGraph = entityManager.getEntityGraph("carWithMakerAndModel");
+        EntityGraph entityGraph = entityManager.getEntityGraph("carWithMakerAndModelAndUser");
 
         Root<Car> carRoot = query.from(Car.class);
         List<Predicate> predicates = new ArrayList<>();
