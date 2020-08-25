@@ -1,17 +1,12 @@
 package org.example.carsellingservice.repository;
 
-import org.example.carsellingservice.domain.Model;
-import org.springframework.data.repository.CrudRepository;
+import org.example.carsellingservice.domain.CarModel;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-/**
- * Таблица моделей машин.
- */
-public interface CarModelRepository extends CrudRepository<Model, Integer> {
+import java.util.Optional;
 
-    /**
-     * Находит модель машы по названию.
-     * @param name - название модели машины.
-     * @return Найденная модель машины.
-     */
-    Model findByName(String name);
+public interface CarModelRepository extends JpaRepository<CarModel, Integer> {
+
+    //todo entity graph
+    Optional<CarModel> findByName(String name);
 }

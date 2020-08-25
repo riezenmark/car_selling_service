@@ -1,14 +1,9 @@
 package org.example.carsellingservice.service.api;
 
-import org.example.carsellingservice.dao.MakerDao;
+import org.example.carsellingservice.domain.CarMaker;
 
-/**
- * Сервис для работы с марками машин.
- */
+import java.util.List;
+
 public interface CarMakerService {
-    /**
-     * Возвращает все марки машин машин без моделей.
-     * @return Возвращённые марки машин.
-     */
-    Iterable<MakerDao> getAllWithoutModels();
+    List<CarMaker> getAllWithoutModels();
 }

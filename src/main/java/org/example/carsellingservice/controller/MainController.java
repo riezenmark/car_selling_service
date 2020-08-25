@@ -1,5 +1,6 @@
-package org.example.carsellingservice.web.controller;
+package org.example.carsellingservice.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.example.carsellingservice.domain.Car;
 import org.example.carsellingservice.domain.User;
 import org.example.carsellingservice.service.api.CarMakerService;
@@ -13,36 +14,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.HashMap;
 
-/**
- * Контроллер для главной страницы приложения.
- */
 @Controller
 @RequestMapping("/")
+@RequiredArgsConstructor
 public class MainController {
 
-    /**
-     * Сервис для работы с марками машин.
-     */
+    //todo ?
     private final CarMakerService makerService;
-    /**
-     * Сервис для работы с машинами.
-     */
     private final CarService carService;
 
-    @Autowired
-    public MainController(CarMakerService makerService, CarService carService) {
-        this.makerService = makerService;
-        this.carService = carService;
-    }
-
-    /**
-     * Передаёт список моделей, максимальную цену машины (для сокращения количества запросов к базе)
-     * и данные пользователя, если он авторизован (для изменения вида и набора разрешённых действий
-     * в зависимости от роли пользователя), для хранения на клиенте.
-     * @param model - модель данных для передачи на клиент.
-     * @param user - пользователь, авторизованный в данный момент.
-     * @return Главная страница приложения.
-     */
+    //todo убрать девмод
     @GetMapping
     public String main(Model model, @AuthenticationPrincipal User user) {
         HashMap<Object, Object> frontendData = new HashMap<>();

@@ -134,7 +134,7 @@
             },
             addNewCarModel() {
                 const model = {
-                    maker: {
+                    carMaker: {
                         name: this.addMark
                     },
                     name: this.addModel.text
@@ -162,13 +162,13 @@
                 const modelInfo = []
                 const previousModel = {
                     name: this.previousModel,
-                    maker: {
+                    carMaker: {
                         name: this.previousMaker
                     },
                 }
                 const model = {
                     name: this.modelParam.text,
-                    maker: {
+                    carMaker: {
                         name: this.makerParam.text
                     }
                 }
@@ -185,7 +185,7 @@
             },
             deleteModel() {
                 const model = {
-                    maker: {
+                    carMaker: {
                         name: this.changeMark
                     },
                     name: this.changeModel.text
@@ -197,7 +197,7 @@
             }
         },
         created() {
-            this.makers.forEach(maker => this.makerNames.push(maker.name))
+            this.makers.forEach(carMaker => this.makerNames.push(carMaker.name))
         },
     }
 </script>

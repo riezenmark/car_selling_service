@@ -3,7 +3,7 @@
         <v-card>
             <v-img v-if="car.filename" :src="/img/+car.filename">
             </v-img>
-            <v-card-title>{{car.maker.name}}<v-spacer></v-spacer>{{car.price}}</v-card-title>
+            <v-card-title>{{car.carMaker.name}}<v-spacer></v-spacer>{{car.price}}</v-card-title>
             <v-card-subtitle>{{car.model.name}}<v-spacer></v-spacer>{{car.yearOfProduction}}</v-card-subtitle>
             <v-card-actions>
                 <div v-if="showButtons">
@@ -58,10 +58,10 @@
                     this.showButtons = true
                 }
             }
-            if (!this.car.maker.id) {
-                this.makers.forEach(maker => {
-                    if (maker.id === this.car.maker) {
-                        this.car.maker = maker
+            if (!this.car.carMaker.id) {
+                this.makers.forEach(carMaker => {
+                    if (carMaker.id === this.car.carMaker) {
+                        this.car.carMaker = carMaker
                     }
                 })
             }

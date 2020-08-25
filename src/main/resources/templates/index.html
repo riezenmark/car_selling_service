@@ -6,11 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
     <title>CarSellingApp Example</title>
     <script th:inline="javascript">
-        var frontendData = [[${frontendData}]];
+        const frontendData = [[${frontendData}]];
     </script>
 </head>
 <body>
 <div id="app"></div>
-<script th:src="'/js/main.js'"></script>
+<!--todo при продакшене-->
+<script th:src="'http://localhost:8001/main.js'"></script>
 </body>
 </html>
