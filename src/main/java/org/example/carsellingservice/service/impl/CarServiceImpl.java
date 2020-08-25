@@ -45,6 +45,12 @@ public class CarServiceImpl implements CarService {
 
     @Override
     @Transactional(readOnly = true)
+    public List<CarDto> getCarsOfUserWithId(Long userId) {
+        return mapper.map(carRepository.findByUser_Id(userId));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public CarDto getById(final Long id) {
         return mapper.map(carRepository.findByIdWithMakerAndModel(id).orElse(null));
     }

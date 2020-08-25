@@ -14,6 +14,9 @@ public interface CarRepository extends JpaRepository<Car, Long>, CarRepositoryCu
     @EntityGraph(value = "carWithMakerAndModel")
     List<Car> findAll();
 
+    @EntityGraph(value = "carWithMakerAndModel")
+    List<Car> findByUser_Id(Long userId);
+
     @Query("SELECT c from Car c where c.id = :id")
     @EntityGraph(value = "carWithMakerAndModel")
     Optional<Car> findByIdWithMakerAndModel(Long id);

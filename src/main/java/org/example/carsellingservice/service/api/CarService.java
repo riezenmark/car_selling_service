@@ -21,4 +21,6 @@ public interface CarService {
     CarDto update(final Long id, final Car car, final User user);
 
     void deleteById(final Long id, final User user);
+
+    List<CarDto> getCarsOfUserWithId(Long userId);
 }

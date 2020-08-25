@@ -6,7 +6,6 @@ import org.example.carsellingservice.domain.User;
 import org.example.carsellingservice.repository.UserRepository;
 import org.example.carsellingservice.service.api.UserService;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -25,7 +24,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<User> getUsers(String searchQuery) {
+    public List<User> getUsers(final String searchQuery) {
         return Optional.ofNullable(searchQuery)
                 .map(s -> userRepository.findByUsernameLike(s.toUpperCase()))
                 .orElseGet(userRepository::findAll);
@@ -33,13 +32,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = true)
-    public User getById(Long id) {
+    public User getById(final Long id) {
         return userRepository.findById(id).orElse(null);
     }
 
     @Override
     @Transactional
-    public void addNew(User user) {
+    public void addNew(final User user) {
         user.setActive(true);
         user.setAuthorities(Collections.singleton(Role.USER));
         user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -48,20 +47,19 @@ public class UserServiceImpl implements UserService {
 
     //todo roles?
     @Override
-    public User update(Long id, User user) {
+    public User update(final Long id, final User user) {
         return null;
     }
 
-    //todo transactional
     @Override
-    public void deleteById(Long id) {
+    @Transactional
+    public void deleteById(final Long id) {
         userRepository.findById(id).ifPresent(userRepository::delete);
     }
 
-    //todo bean validation?
     @Override
     @Transactional(readOnly = true)
-    public boolean userWithNameExists(User user) {
+    public boolean userWithNameExists(final User user) {
         boolean exists = true;
         if (user != null && user.getUsername() != null) {
             exists = userRepository.existsByUsername(user.getUsername());
@@ -70,7 +68,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
         return userRepository.findByUsername(username);
     }
 }

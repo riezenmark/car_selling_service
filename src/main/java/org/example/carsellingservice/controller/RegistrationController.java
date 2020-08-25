@@ -24,9 +24,7 @@ public class RegistrationController {
     @PostMapping
     public String addUser(final User user, final Map<String, Object> model) {
         String page = "signup";
-        if (userService.userWithNameExists(user)) {
-            model.put("message", "User with name " + user.getUsername() + " already exists");
-        } else {
+        if (!userService.userWithNameExists(user)) {
             userService.addNew(user);
             page = "redirect:/login";
         }

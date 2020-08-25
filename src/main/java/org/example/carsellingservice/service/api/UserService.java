@@ -6,15 +6,15 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import java.util.List;
 
 public interface UserService extends UserDetailsService {
-    List<User> getUsers(String searchQuery);
+    List<User> getUsers(final String searchQuery);
 
-    void deleteById(Long id);
+    void deleteById(final Long id);
 
-    User getById(Long id);
+    User getById(final Long id);
 
-    boolean userWithNameExists(User user);
+    boolean userWithNameExists(final User user);
 
-    void addNew(User user);
+    void addNew(final User user);
 
-    User update(Long id, User user);
+    User update(final Long id, final User user);
 }

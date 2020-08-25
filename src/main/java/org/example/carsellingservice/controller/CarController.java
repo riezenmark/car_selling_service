@@ -11,6 +11,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/cars")
@@ -21,6 +22,7 @@ public class CarController {
 
     @GetMapping
     public List<CarDto> searchForCars(
+            @RequestParam(required = false) Long user,
             @RequestParam(required = false) Integer manufacturer,
             @RequestParam(required = false) Long model,
             @RequestParam(required = false) Integer priceFrom,
@@ -30,9 +32,9 @@ public class CarController {
             @RequestParam(value = "transmission[]", required = false) List<Transmission> transmission,
             @RequestParam(value = "engineType[]", required = false) List<EngineType> engineType
     ) {
-        return carService.getCars(
-                manufacturer, model, priceFrom, priceTo, yearFrom, yearTo, transmission, engineType
-        );
+        return Optional.ofNullable(user)
+                .map(carService::getCarsOfUserWithId)
+                .orElseGet(() -> carService.getCars(manufacturer, model, priceFrom, priceTo, yearFrom, yearTo, transmission, engineType));
     }
 
     @GetMapping("{id}")

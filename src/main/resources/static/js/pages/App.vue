@@ -72,10 +72,10 @@
       </v-btn>
       <v-btn
           outlined
-          v-if="profile && profile.authorities === 'riezenmark@gmail.com'"
+          v-if="profile && profile.authorities.includes('ADMIN')"
           @click="adminPage"
           class="white--text ml-2"
-      >ADMIN
+      >ADMIN PAGE
       </v-btn>
     </v-app-bar>
     <v-main>
@@ -158,11 +158,11 @@ export default {
       this.$router.push('/admin')
     },
     carAddingPage(profile) {
-      //if (profile) {
+      if (profile) {
         this.$router.push('/add')
-      //} else {
-        //window.location.replace('/signup')
-      //}
+      } else {
+        window.location.replace('/signup')
+      }
     },
     mainPage() {
       if (this.$route.path !== '/') {
@@ -221,7 +221,7 @@ export default {
       }
       if (this.profile) {
         this.cars = []
-        this.$resource('/api/cars/' + this.profile.id).get().then(result =>
+        this.$resource('/api/cars/').get({user: this.profile.id}).then(result =>
             result.json().then(
                 data => data.forEach(
                     car => this.cars.push(car)
