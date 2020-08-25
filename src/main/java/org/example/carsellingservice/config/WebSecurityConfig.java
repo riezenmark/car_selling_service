@@ -28,12 +28,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
      */
     private final UserService userService;
 
-    //todo static
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.antMatcher("/**")
                 .authorizeRequests()
-                    .antMatchers("/**", "/api/**/**", "/static/js/**", "/error**", "/signup").permitAll()
+                    .antMatchers("/**", "/api/**/**", "/js/**", "/error**", "/signup").permitAll()
                     .anyRequest().authenticated()
                 .and()
                     .formLogin()
