@@ -1,47 +1,51 @@
 <template>
   <div>
-    <v-layout row>
-      <v-text-field
-          label="Поиск пользователей"
-          placeholder="Введите имя"
-          v-model="search"
-          @keyup.enter="searchForUsers"
-          class="pl-3"/>
-      <v-btn @click="searchForUsers" icon class="mr-3">
-        <v-icon>mdi-account-search</v-icon>
-      </v-btn>
-    </v-layout>
-    <v-simple-table>
-      <thead>
-      <tr>
-        <th class="text-left">ID</th>
-        <th class="text-left">Username</th>
-        <th class="text-left">Active</th>
-        <th class="text-left">AccountNonExpired</th>
-        <th class="text-left">AccountNonLocked</th>
-        <th class="text-left">CredentialsNonExpired</th>
-        <th class="text-left">Authorities</th>
-        <th class="text-left">Actions</th>
-      </tr>
-      </thead>
-      <tbody>
-      <user-row v-for="user in users"
-                :key="user.id"
-                :user="user"
-                :deleteUser="deleteUser"
-      />
-      </tbody>
-    </v-simple-table>
+    <div v-if="profile && profile.authorities.includes('ADMIN')">
+      <v-layout row>
+        <v-text-field
+            label="Поиск пользователей"
+            placeholder="Введите имя"
+            v-model="search"
+            @keyup.enter="searchForUsers"
+            class="pl-3"/>
+        <v-btn @click="searchForUsers" icon class="mr-3">
+          <v-icon>mdi-account-search</v-icon>
+        </v-btn>
+      </v-layout>
+      <v-simple-table>
+        <thead>
+        <tr>
+          <th class="text-left">ID</th>
+          <th class="text-left">Username</th>
+          <th class="text-left">Active</th>
+          <th class="text-left">AccountNonExpired</th>
+          <th class="text-left">AccountNonLocked</th>
+          <th class="text-left">CredentialsNonExpired</th>
+          <th class="text-left">Authorities</th>
+          <th class="text-left">Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <user-row v-for="user in users"
+                  :key="user.id"
+                  :user="user"
+                  :deleteUser="deleteUser"
+        />
+        </tbody>
+      </v-simple-table>
+    </div>
   </div>
 </template>
 
 <script>
 import UserRow from 'components/users/UserRow.vue'
+import {mapState} from 'vuex'
 
 export default {
   components: {
     UserRow
   },
+  computed: mapState(['profile']),
   data() {
     return {
       user: null,

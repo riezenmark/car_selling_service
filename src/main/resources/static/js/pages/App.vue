@@ -123,7 +123,7 @@ export default {
     AUTOMATIC: '',
     MECHANIC: ''
   }),
-  computed: mapState(['profile', 'makers']),
+  computed: mapState(['profile', 'makers', 'addedCars']),
   methods: {
     getModels() {
       let makerId
@@ -159,7 +159,9 @@ export default {
     },
     carAddingPage(profile) {
       if (profile) {
-        this.$router.push('/add')
+        if (this.$route.path !== '/add') {
+          this.$router.push('/add')
+        }
       } else {
         window.location.replace('/signup')
       }
@@ -220,14 +222,7 @@ export default {
         this.$router.push('/')
       }
       if (this.profile) {
-        this.cars = []
-        this.$resource('/api/cars/').get({user: this.profile.id}).then(result =>
-            result.json().then(
-                data => data.forEach(
-                    car => this.cars.push(car)
-                )
-            )
-        )
+        this.cars = this.addedCars
       }
     }
   },

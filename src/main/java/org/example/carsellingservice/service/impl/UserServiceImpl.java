@@ -45,10 +45,16 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
-    //todo roles?
     @Override
+    @Transactional
     public User update(final Long id, final User user) {
-        return null;
+        User userFromRepository = userRepository.findById(id).orElse(null);
+        if (userFromRepository != null && user != null && userFieldsAreValid(user)) {
+            userFromRepository.setAuthorities(user.getAuthorities());
+            userFromRepository.setUsername(user.getUsername());
+            userFromRepository = userRepository.save(userFromRepository);
+        }
+        return userFromRepository;
     }
 
     @Override
@@ -68,7 +74,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
         return userRepository.findByUsername(username);
+    }
+
+    private boolean userFieldsAreValid(User user) {
+        return user.getAuthorities() != null
+                && !user.getAuthorities().isEmpty()
+                && !userWithNameExists(user);
     }
 }

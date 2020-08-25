@@ -15,6 +15,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     boolean existsByUsername(String username);
 
-    @EntityGraph(attributePaths = {"addedCars", "authorities"})
     UserDetails findByUsername(String username);
 }

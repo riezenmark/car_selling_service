@@ -54,7 +54,8 @@ alter table if exists cars
 alter table if exists cars
     add constraint cars_users_fk
         foreign key (user_id)
-            references users;
+            references users
+            on delete cascade;
 
 alter table if exists user_roles
     add constraint roles_users_fk

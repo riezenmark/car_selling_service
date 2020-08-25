@@ -68,7 +68,7 @@ export default {
     getModels() {
       let makerId
       this.makers.forEach(maker => {
-        if (maker.name === this.mark) {
+        if (maker.name === this.markText) {
           makerId =  maker.id
         }
       })

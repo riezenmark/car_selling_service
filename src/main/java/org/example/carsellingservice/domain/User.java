@@ -7,7 +7,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -28,8 +27,6 @@ public class User implements UserDetails {
     @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
     @Enumerated(EnumType.STRING)
     private Set<Role> authorities;
-    @OneToMany(mappedBy = "user")
-    private List<Car> addedCars;
 
     @Override
     public boolean isAccountNonExpired() {

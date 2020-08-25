@@ -11,13 +11,15 @@ import java.util.Optional;
 
 public interface CarRepository extends JpaRepository<Car, Long>, CarRepositoryCustom {
     @Override
-    @EntityGraph(value = "carWithMakerAndModel")
+    @EntityGraph(value = "carWithMakerAndModelAndUser")
     List<Car> findAll();
 
-    @EntityGraph(value = "carWithMakerAndModel")
+    @EntityGraph(value = "carWithMakerAndModelAndUser")
     List<Car> findByUser_Id(Long userId);
 
     @Query("SELECT c from Car c where c.id = :id")
-    @EntityGraph(value = "carWithMakerAndModel")
+    @EntityGraph(value = "carWithMakerAndModelAndUser")
     Optional<Car> findByIdWithMakerAndModel(Long id);
+
+    boolean existsByIdAndUser_Id(Long id, Long userId);
 }

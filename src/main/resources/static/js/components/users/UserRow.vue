@@ -22,7 +22,7 @@ export default {
       this.deleteUser(this.user)
     },
     update() {
-
+      this.$router.push('users/' + this.user.id)
     }
   }
 }

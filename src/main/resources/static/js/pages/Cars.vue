@@ -13,7 +13,7 @@ export default {
   },
   methods: {
     deleteCar(car) {
-      this.$resource('/cars').remove({id: car.id}).then(result => {
+      this.$resource('/api/cars{/id}').remove({id: car.id}).then(result => {
         if (result.ok) {
           this.cars.splice(this.cars.indexOf(car), 1)
         }

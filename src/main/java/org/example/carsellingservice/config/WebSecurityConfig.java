@@ -10,13 +10,22 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+/**
+ * Настройка авторизации и аутентификации.
+ */
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @RequiredArgsConstructor
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
+    /**
+     * Кодировщик паролей.
+     */
     private final PasswordEncoder passwordEncoder;
+    /**
+     * Сервис для работы с пользователями.
+     */
     private final UserService userService;
 
     //todo static
@@ -24,7 +33,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.antMatcher("/**")
                 .authorizeRequests()
-                    .antMatchers("/**", "/api/**/**", "/static/js/**", "/error**", "/signup", "/add", "/admin/**").permitAll()
+                    .antMatchers("/**", "/api/**/**", "/static/js/**", "/error**", "/signup").permitAll()
                     .anyRequest().authenticated()
                 .and()
                     .formLogin()

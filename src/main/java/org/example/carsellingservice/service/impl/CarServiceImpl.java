@@ -59,8 +59,9 @@ public class CarServiceImpl implements CarService {
     @Transactional
     public CarDto add(final Car car, final User user) {
         Car carFromRepository = null;
-        if (carIsValid(car)) {
+        if (carIsValid(car) && user != null) {
             car.setId(null);
+            car.setUser(user);
             carFromRepository = carRepository.save(car);
         }
         return mapper.map(carFromRepository);
@@ -70,7 +71,7 @@ public class CarServiceImpl implements CarService {
     @Transactional
     public CarDto update(final Long id, final Car car, final User user) {
         Car carFromRepository = carRepository.findByIdWithMakerAndModel(id).orElse(null);
-        if (carFromRepository != null && carIsValid(car)) {
+        if (carFromRepository != null && carIsValid(car) && carBelongsToUser(car, user)) {
             car.setId(id);
             carFromRepository = carRepository.save(car);
         }
@@ -80,7 +81,7 @@ public class CarServiceImpl implements CarService {
     @Override
     @Transactional
     public void deleteById(final Long id, final User user) {
-        if (carRepository.existsById(id)) {
+        if (carRepository.existsByIdAndUser_Id(id, user.getId())) {
             carRepository.deleteById(id);
         }
     }
@@ -99,5 +100,10 @@ public class CarServiceImpl implements CarService {
     private boolean carIsValid(Car car) {
         return carFieldsAreValid(car)
                 && modelService.modelBelongsToMakerWithId(car.getModel(), car.getMaker().getId());
+    }
+
+    private boolean carBelongsToUser(Car car, User user) {
+        return user != null
+                && car.getUser().getId().equals(user.getId());
     }
 }

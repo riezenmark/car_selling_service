@@ -11,10 +11,11 @@ import javax.persistence.*;
 @Getter
 @Setter
 @Table(name = "cars")
-@NamedEntityGraph(name = "carWithMakerAndModel",
+@NamedEntityGraph(name = "carWithMakerAndModelAndUser",
     attributeNodes = {
             @NamedAttributeNode("maker"),
-            @NamedAttributeNode("model")
+            @NamedAttributeNode("model"),
+            @NamedAttributeNode("user")
     })
 public class Car {
     @Id
