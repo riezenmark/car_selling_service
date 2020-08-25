@@ -4,17 +4,19 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Set;
 
 @Entity
 @Getter
 @Setter
-@Table(name = "makers")
-public class CarMaker {
+@Table(name = "car_makers")
+public class CarMaker implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
+    @Column(unique = true)
     private String name;
-    @OneToMany(mappedBy = "maker", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "maker")
     private Set<CarModel> models;
 }

@@ -16,4 +16,3 @@ new Vue({
     vuetify,
     render: a => a(App)
 })
-

@@ -1,21 +1,25 @@
 package org.example.carsellingservice.repository;
 
-import org.example.carsellingservice.domain.*;
+import org.example.carsellingservice.domain.Car;
+import org.example.carsellingservice.repository.custom.CarRepositoryCustom;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Optional;
 
-public interface CarRepository extends JpaRepository<Car, Long> {
+public interface CarRepository extends JpaRepository<Car, Long>, CarRepositoryCustom {
+    @Override
+    @EntityGraph(value = "carWithMakerAndModelAndUser")
+    List<Car> findAll();
 
-    //todo entity graph
-    //todo find by car maker name?
-    List<Car> findByMaker(CarMaker carMaker);
+    @EntityGraph(value = "carWithMakerAndModelAndUser")
+    List<Car> findByUser_Id(Long userId);
 
-    @Query("SELECT max(c.price) from Car c")
-    Integer getMaximumCarPrice();
+    @Query("SELECT c from Car c where c.id = :id")
+    @EntityGraph(value = "carWithMakerAndModelAndUser")
+    Optional<Car> findByIdWithMakerAndModel(Long id);
 
-    //todo entity graph
-    //todo find by user_?
-    List<Car> findByUser(User user);
+    boolean existsByIdAndUser_Id(Long id, Long userId);
 }

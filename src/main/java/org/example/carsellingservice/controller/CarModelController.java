@@ -6,35 +6,43 @@ import org.example.carsellingservice.service.api.CarModelService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
-@RequestMapping("/models")
+@RequestMapping("/api/models")
 @RequiredArgsConstructor
 public class CarModelController {
 
     private final CarModelService modelService;
 
     @GetMapping
-    public Iterable<CarModel> getModelsOfMaker(@RequestParam String makerName) {
-        return modelService.getAllModelsOfMaker(makerName);
+    public List<CarModel> list(
+            @RequestParam(name = "q", required = false) final String name,
+            @RequestParam(name = "maker", required = false) final Integer makerId
+    ) {
+        return modelService.getModels(name, makerId);
+    }
+
+    @GetMapping("{id}")
+    public CarModel get(@PathVariable final Long id) {
+        return modelService.getById(id);
     }
 
     @PostMapping
-    @PreAuthorize("principal.email == 'riezenmark@gmail.com'")
-    public CarModel add(@RequestBody CarModel model) {
-        return modelService.addOne(model);
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public CarModel save(@RequestBody final CarModel model) {
+        return modelService.add(model);
     }
 
-    //todo роли
-    @PutMapping
-    @PreAuthorize("principal.email == 'riezenmark@gmail.com'")
-    public void update(@RequestBody CarModel[] models) {
-        modelService.updateOne(models[0], models[1]);
+    @PutMapping("{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public CarModel update(@PathVariable final Long id, @RequestBody final CarModel model) {
+        return modelService.update(id, model);
     }
 
-    //todo роли
-    @DeleteMapping
-    @PreAuthorize("principal.email == 'riezenmark@gmail.com'")
-    public void delete(@RequestBody CarModel model) {
-        modelService.deleteOne(model);
+    @DeleteMapping("{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public void delete(@PathVariable final Long id) {
+        modelService.deleteById(id);
     }
 }

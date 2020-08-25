@@ -1,33 +1,26 @@
 package org.example.carsellingservice.service.api;
 
 import org.example.carsellingservice.domain.Car;
+import org.example.carsellingservice.domain.EngineType;
+import org.example.carsellingservice.domain.Transmission;
 import org.example.carsellingservice.domain.User;
-import org.springframework.web.multipart.MultipartFile;
+import org.example.carsellingservice.dto.CarDto;
 
-import java.io.IOException;
 import java.util.List;
 
 public interface CarService {
+    List<CarDto> getCars(final Integer makerId, final Long modelId, final Integer priceFrom,
+                      final Integer priceTo, final Integer yearFrom, final Integer yearTo,
+                      final List<Transmission> transmission, final List<EngineType> engineType);
 
-    //todo pageable?
-    List<Car> getAll();
 
-    //todo refactor
-    void addCarForUser(
-            User user, String modelName, String makerName, int price,
-            int yearOfProduction, String transmission, String engineType, MultipartFile file
-    ) throws IOException;
+    CarDto getById(final Long id);
 
-    List<Car> findCars(
-            String manufacturer, String model, Integer priceFrom, Integer priceTo, Integer yearFrom,
-            Integer yearTo, List<String> transmission, List<String> engineType
-    );
+    CarDto add(final Car car, final User user);
 
-    Integer getMaximumCarPrice();
+    CarDto update(final Long id, final Car car, final User user);
 
-    List<Car> getCarsOfUserWithId(String id);
+    void deleteById(final Long id, final User user);
 
-    void deleteCarWithId(Long id, User user);
-
-    void updateCar(Car car, User user);
+    List<CarDto> getCarsOfUserWithId(Long userId);
 }

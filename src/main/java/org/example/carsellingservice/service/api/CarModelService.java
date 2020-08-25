@@ -4,11 +4,16 @@ import org.example.carsellingservice.domain.CarModel;
 
 import java.util.List;
 
-//todo rename
 public interface CarModelService {
-    List<CarModel> getAllModelsOfMaker(String makerName);
+    List<CarModel> getModels(final String searchQuery, final Integer makerId);
 
-    void updateOne(CarModel previousModel, CarModel model);
+    CarModel getById(final Long id);
 
-    void deleteOne(CarModel model);
+    CarModel add(final CarModel model);
+
+    CarModel update(final Long id, final CarModel model);
+
+    void deleteById(final Long id);
+
+    boolean modelBelongsToMakerWithId(final CarModel model, final Integer makerId);
 }

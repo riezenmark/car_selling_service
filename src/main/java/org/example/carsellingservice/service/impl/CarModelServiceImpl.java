@@ -1,109 +1,91 @@
 package org.example.carsellingservice.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.example.carsellingservice.domain.CarMaker;
 import org.example.carsellingservice.domain.CarModel;
-import org.example.carsellingservice.repository.CarMakerRepository;
 import org.example.carsellingservice.repository.CarModelRepository;
+import org.example.carsellingservice.service.api.CarMakerService;
 import org.example.carsellingservice.service.api.CarModelService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
+import java.util.Optional;
+
+import static org.example.carsellingservice.repository.specification.CarModelSpecification.*;
 
 @Service
 @RequiredArgsConstructor
 public class CarModelServiceImpl implements CarModelService {
 
-    //todo Автовайрим сервисы, передаём дто (mapStruct)
     private final CarModelRepository modelRepository;
-    private final CarMakerRepository makerRepository;
-
-    public CarModel addOne(CarModel model) {
-        CarModel resultingModel = null;
-        //todo использовать опшионалы
-        if (modelRepository.findByName(model.getName()) == null) {
-            String makerName = model.getCarMaker().getName();
-            CarMaker carMaker = makerRepository.findByName(makerName);
-            if (carMaker == null) {
-                carMaker = this.createNewMakerWithName(makerName);
-            }
-            model.setCarMaker(carMaker);
-            Set<CarModel> makersModels = this.getModelsOfMaker(carMaker);
-            makersModels.add(model);
-            carMaker.setModels(makersModels);
-            resultingModel =  modelRepository.save(model);
-        }
-        return resultingModel;
-    }
+    private final CarMakerService makerService;
 
     @Override
-    public Iterable<CarModel> getAllModelsOfMaker(String makerName) {
-        return makerRepository.findByName(makerName).getModels();
-    }
-
-    @Override
-    public void updateOne(CarModel previousModel, CarModel model) {
-        //todo использовать опшионалы
-        previousModel = modelRepository.findByName(previousModel.getName());
-        if (previousModel != null) {
-            previousModel.setName(model.getName());
-            CarMaker carMaker = makerRepository.findByName(previousModel.getCarMaker().getName());
-            if (carMaker != null) {
-                String makerName = model.getCarMaker().getName();
-                this.saveModelAndMakerWithName(carMaker, makerName, previousModel);
-            }
-        }
-    }
-
-    @Override
-    public void deleteOne(CarModel model) {
-        //todo использовать опшионалы
-        CarModel modelFromDatabase = modelRepository.findByName(model.getName());
-        if (modelFromDatabase != null) {
-            modelRepository.delete(modelFromDatabase);
-            CarMaker carMaker = makerRepository.findByName(model.getCarMaker().getName());
-            if (carMaker != null) {
-                Set<CarModel> makersModels = this.removeModelFromMaker(carMaker, model);
-                this.deleteMakerOrSaveMakersModels(carMaker, makersModels);
-            }
-        }
-    }
-
-    private CarMaker createNewMakerWithName(String makerName) {
-        CarMaker carMaker = new CarMaker();
-        carMaker.setName(makerName);
-        return makerRepository.save(carMaker);
-    }
-
-    private Set<CarModel> getModelsOfMaker(CarMaker carMaker) {
-        Set<CarModel> makersModels = carMaker.getModels();
-        if (makersModels == null) {
-            makersModels = new HashSet<>();
-        }
-        return makersModels;
-    }
-
-    private void saveModelAndMakerWithName(CarMaker carMaker, String makerName, CarModel previousModel) {
-        carMaker.setName(makerName);
-        makerRepository.save(carMaker);
-        previousModel.setCarMaker(carMaker);
-        modelRepository.save(previousModel);
-    }
-
-    private Set<CarModel> removeModelFromMaker(CarMaker carMaker, CarModel model) {
-        Set<CarModel> makersModels = carMaker.getModels();
-        makersModels.remove(model);
-        return makersModels;
-    }
-
-    private void deleteMakerOrSaveMakersModels(CarMaker carMaker, Set<CarModel> makersModels) {
-        if (makersModels.size() == 0) {
-            makerRepository.delete(carMaker);
+    @Transactional(readOnly = true)
+    public List<CarModel> getModels(final String searchQuery, final Integer makerId) {
+        List<CarModel> modelsFromDatabase;
+        if (makerId == null) {
+            modelsFromDatabase = Optional.ofNullable(searchQuery)
+                    .map(name -> modelRepository.findAll(carModelsWithNameLike(name)))
+                    .orElseGet(modelRepository::findAll);
         } else {
-            carMaker.setModels(makersModels);
-            makerRepository.save(carMaker);
+            modelsFromDatabase = Optional.ofNullable(searchQuery)
+                    .map(name -> modelRepository.findAll(carModelsOfMakerWithIdAndNameLike(makerId, name)))
+                    .orElseGet(() -> modelRepository.findAll(carModelsOfCarMakerWithId(makerId)));
         }
+        return modelsFromDatabase;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public CarModel getById(final Long id) {
+        return modelRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    @Transactional
+    public CarModel add(final CarModel model) {
+        CarModel modelFromRepository = null;
+        if (modelFieldsAreValid(model) && makerService.existsById(model.getMaker().getId())) {
+            modelFromRepository = modelRepository
+                    .findByNameAndMaker_id(model.getName(), model.getMaker().getId())
+                    .orElseGet(() -> {
+                        model.setId(null);
+                        return modelRepository.save(model);
+                    });
+        }
+        return modelFromRepository;
+    }
+
+    @Override
+    @Transactional
+    public CarModel update(final Long id, final CarModel model) {
+        return modelRepository.findById(id)
+                .filter(modelFromRepository -> !makerService.carMakerOfModelHasModelWithName(modelFromRepository, model.getName()))
+                .map(modelFromRepository -> {
+                    modelFromRepository.setName(model.getName());
+                    return modelRepository.save(modelFromRepository);
+                })
+                .orElse(null);
+    }
+
+    @Override
+    @Transactional
+    public void deleteById(final Long id) {
+        if (modelRepository.existsById(id)) {
+            modelRepository.deleteById(id);
+        }
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public boolean modelBelongsToMakerWithId(final CarModel model, final Integer makerId) {
+        return modelRepository.existsByIdAndMaker_id(model.getId(), makerId);
+    }
+
+    private boolean modelFieldsAreValid(final CarModel model) {
+        return model.getName() != null
+                && model.getMaker() != null
+                && model.getMaker().getId() != null;
     }
 }

@@ -1,4 +1,4 @@
-insert into makers (id, name)
+insert into car_makers (id, name)
 values (1, 'Acura'),
        (2, 'Audi'),
        (3, 'Chevrolet'),
@@ -18,4 +18,4 @@ values (1, 'Acura'),
        (17, 'Volkswagen'),
        (18, 'Volvo');
 
-alter sequence makers_id_seq restart with 19;
+alter sequence car_makers_id_seq restart with 19;

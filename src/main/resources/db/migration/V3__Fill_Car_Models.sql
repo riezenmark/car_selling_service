@@ -1,4 +1,4 @@
-insert into models (id, name, maker_id)
+insert into car_models (id, name, maker_id)
 values (1, 'CL', 1),
        (2, 'CSX', 1),
        (3, 'EL', 1),
@@ -54,4 +54,4 @@ values (1, 'CL', 1),
        (53, 'S40', 18),
        (54, 'V70', 18);
 
-alter sequence models_id_seq restart with 55;
+alter sequence car_models_id_seq restart with 55;

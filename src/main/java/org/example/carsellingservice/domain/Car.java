@@ -2,46 +2,39 @@ package org.example.carsellingservice.domain;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
-import java.util.Objects;
 
 @Entity
 @Getter
 @Setter
 @Table(name = "cars")
+@NamedEntityGraph(name = "carWithMakerAndModelAndUser",
+    attributeNodes = {
+            @NamedAttributeNode("maker"),
+            @NamedAttributeNode("model"),
+            @NamedAttributeNode("user")
+    })
 public class Car {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @ManyToOne(fetch = FetchType.EAGER)
-    private CarMaker maker;
-    @ManyToOne(fetch = FetchType.EAGER)
-    private CarModel model;
-    private int price;
-    private int yearOfProduction;
-    @Enumerated(EnumType.STRING)
-    private TransmissionType transmissionType;
-    @Enumerated(EnumType.STRING)
-    private EngineType engineType;
-    private String filename;
     @ManyToOne
+    private CarMaker maker;
+    @ManyToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private CarModel model;
+    private Integer price;
+    @Column(name = "year_of_production")
+    private Integer yearOfProduction;
+    @Enumerated(EnumType.STRING)
+    private Transmission transmission;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "engine_type")
+    private EngineType engineType;
+    @ManyToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        Car car = (Car) o;
-        return Objects.equals(id, car.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
 }

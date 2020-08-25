@@ -1,67 +1,56 @@
 package org.example.carsellingservice.config;
 
-import org.example.carsellingservice.domain.User;
-import org.example.carsellingservice.repository.UserDetailsRepository;
-import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth2Sso;
-import org.springframework.boot.autoconfigure.security.oauth2.resource.PrincipalExtractor;
-import org.springframework.context.annotation.Bean;
+import lombok.RequiredArgsConstructor;
+import org.example.carsellingservice.service.api.UserService;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-
-import java.time.LocalDateTime;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 /**
  * Настройка авторизации и аутентификации.
  */
 @Configuration
 @EnableWebSecurity
-@EnableOAuth2Sso
 @EnableGlobalMethodSecurity(prePostEnabled = true)
+@RequiredArgsConstructor
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+
+    /**
+     * Кодировщик паролей.
+     */
+    private final PasswordEncoder passwordEncoder;
+    /**
+     * Сервис для работы с пользователями.
+     */
+    private final UserService userService;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http
-                .antMatcher("/**")
+        http.antMatcher("/**")
                 .authorizeRequests()
-                .antMatchers(
-                        "/", "/login**", "/js/**", "/error**",
-                        "/models**", "/cars**", "/img/**"
-                ).permitAll()
-                .anyRequest().authenticated()
+                    .antMatchers("/**", "/api/**/**", "/js/**", "/error**", "/signup").permitAll()
+                    .anyRequest().authenticated()
                 .and()
-                .logout().logoutSuccessUrl("/").permitAll()
+                    .formLogin()
+                    .permitAll()
                 .and()
-                .csrf().disable();
+                    .rememberMe().alwaysRemember(true)
+                .and()
+                    .logout()
+                    .logoutSuccessUrl("/")
+                    .permitAll()
+                .and()
+                    .csrf()
+                    .disable();
     }
 
-    /**
-     * Извлекает данные пользователя при авторизации, устанавливает время последнего визита
-     * и сохраняет нового/обновляет существующего пользователя в репозитории.
-     * @param repository - хранилище пользователей.
-     * @return Результат сохранения/обновления.
-     */
-    @Bean
-    public PrincipalExtractor principalExtractor(UserDetailsRepository repository) {
-        return map -> {
-            String id = (String) map.get("sub");
-            User user = repository.findById(id).orElseGet(() -> {
-                User newUser = new User();
-
-                newUser.setId(id);
-                newUser.setName((String) map.get("name"));
-                newUser.setEmail((String) map.get("email"));
-                newUser.setGender((String) map.get("gender"));
-                newUser.setLocale((String) map.get("locale"));
-                newUser.setUserpic((String) map.get("picture"));
-
-                return newUser;
-            });
-            user.setLastVisit(LocalDateTime.now());
-            return repository.save(user);
-        };
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(userService)
+                .passwordEncoder(passwordEncoder);
     }
 }

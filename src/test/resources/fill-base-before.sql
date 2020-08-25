@@ -1,18 +1,26 @@
 DELETE FROM cars;
-DELETE FROM models;
-DELETE FROM makers;
+DELETE FROM car_models;
+DELETE FROM car_makers;
+DELETE FROM user_roles;
 DELETE FROM users;
 
-INSERT INTO users (id, email, last_visit, locale, name, userpic) values
-('111111970190884860956',
- 'riezenmark@gmail.com',
- '2020-08-11 11:48:31.818811',
- 'ru', 'riezenmark',
- 'https://lh5.googleusercontent.com/--_onv4zTak4/AAAAAAAAAAI/AAAAAAAAAAA/AMZuucnSEw7JzdRo6jRlkImoO0ZLe8xpfg/photo.jpg');
+alter sequence users_id_seq restart with 1;
+alter sequence cars_id_seq restart with 1;
+alter sequence car_makers_id_seq restart with 1;
+alter sequence car_models_id_seq restart with 1;
 
-INSERT INTO makers (id, name) values (1, 'Honda');
+INSERT INTO users (username, password, active) values
+('admin', 123, true);
+create extension if not exists pgcrypto;
+update users set password = crypt(password, gen_salt('bf', 8));
 
-INSERT INTO models (id, name, maker_id) values (1, 'CR-V', 1);
+INSERT INTO user_roles (user_id, authorities)
+values (1, 'USER'),
+       (1, 'ADMIN');
 
-INSERT INTO cars (id, engine_type, price, transmission, year_of_production, maker_id, model_id, user_id) values
-(1, 'GASOLINE', 500000, 'AUTOMATIC', 2014, 1, 1, '111111970190884860956');
+INSERT INTO car_makers (id, name) values (1, 'Honda');
+
+INSERT INTO car_models (id, name, maker_id) values (1, 'CR-V', 1);
+
+INSERT INTO cars (engine_type, price, transmission, year_of_production, maker_id, model_id, user_id) values
+('GASOLINE', 500000, 'AUTOMATIC', 2014, 1, 1, 1);
